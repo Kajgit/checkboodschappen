@@ -42,3 +42,24 @@ test('pair allocation can recover lines omitted by each individually capped sing
  assert.deepEqual(new Set(combined.lines.map(l=>l.product.retailer)),new Set(['A','B']));
  assert.equal(combined.totalCents,200);
 });
+
+test('limits 1 through 4 preserve missing lines until four complementary shops are allowed',()=>{
+ const baskets=['A','B','C','D'].map((name,i)=>basket(name,Object.fromEntries(['a','b','c','d'].map((id,j)=>[id,i===j?100:null]))));
+ for(let maxStores=1;maxStores<=4;maxStores++){
+  const result=addStoreCombinations({baskets,location:{origin,costPerKm:0}},{maxStores});
+  assert.ok(result.baskets.every(b=>b.stores.length<=maxStores));
+  assert.equal(result.baskets[0].missing.length,4-maxStores);
+  assert.equal(result.baskets[0].totalCents,maxStores*100);
+ }
+});
+test('invalid store limits are rejected',()=>{
+ for(const maxStores of [0,5,2.5,'4'])assert.throws(()=>addStoreCombinations({baskets:[]},{maxStores}));
+});
+test('four-shop trip finds the shortest round trip regardless of input order',async()=>{
+ const {storeRoundTrip}=await import('../src/store-combinations.js');
+ const shops=[.04,.01,.03,.02].map(lon=>({lat:52,lon:5+lon}));
+ const a=storeRoundTrip(origin,shops),b=storeRoundTrip(origin,[...shops].reverse());
+ assert.ok(Math.abs(a.distance-b.distance)<1e-8);
+ const {distanceKm}=await import('../src/locations.js');
+ assert.ok(Math.abs(a.distance-2*distanceKm(origin,shops[0]))<.001);
+});

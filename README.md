@@ -1,6 +1,6 @@
 # Checkboodschappen 🇳🇱
 
-Plak je boodschappenlijst, vul je postcode in en vergelijk winkels in de buurt. Je ziet wat je nodig hebt, hoeveel verpakkingen je moet kopen en wat het kost bij één of twee winkels.
+Plak je boodschappenlijst, vul je postcode in en vergelijk winkels in de buurt. Je ziet wat je nodig hebt, hoeveel verpakkingen je moet kopen en wat het kost bij maximaal vier winkels.
 
 Gemaakt voor Nederlandse supermarkten.
 
@@ -8,7 +8,7 @@ Gemaakt voor Nederlandse supermarkten.
 
 ## Wat kan het?
 
-- Boodschappen vergelijken op postcode
+- Boodschappen vergelijken op postcode, verdeeld over 1 tot 4 winkels
 - Hoeveelheden aanpassen, ook voor meerdere personen
 - Producten en winkels openen
 - Je bon downloaden als PDF of PNG

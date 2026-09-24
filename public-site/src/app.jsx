@@ -221,6 +221,7 @@ function App() {
     [review, setReview] = useState(null),
     [postcode, setPostcode] = useState(""),
     [radius, setRadius] = useState(10),
+    [maxStores, setMaxStores] = useState(2),
     [travel, setTravel] = useState(0),
     [loyalty, setLoyalty] = useState(false),
     [busy, setBusy] = useState(false),
@@ -400,6 +401,7 @@ function App() {
               stores,
               locationOptions: {
                 radius: Number(radius),
+                maxStores: Number(maxStores),
                 costPerKm: Number(travel),
               },
             });
@@ -727,6 +729,11 @@ function App() {
                     ))}
                   </select>
                 </label>
+                <label htmlFor="max-stores">Max. winkels
+                  <select id="max-stores" value={maxStores} disabled={busy} onChange={(e) => {setMaxStores(Number(e.target.value)); invalidate();}}>
+                    {[1, 2, 3, 4].map(n => <option key={n} value={n}>{n} {n === 1 ? "winkel" : "winkels"}</option>)}
+                  </select>
+                </label>
               </div>
               <details className="settings-extra">
                 <summary>
@@ -798,7 +805,7 @@ function App() {
             <div className="result-heading">
               <h2>Vergelijking</h2>
               <span>
-                {result ? `${result.baskets.length} opties` : "Max. 2 winkels"}
+                {result ? `${result.baskets.length} opties` : `Max. ${maxStores} ${Number(maxStores) === 1 ? "winkel" : "winkels"}`}
               </span>
             </div>
             <div

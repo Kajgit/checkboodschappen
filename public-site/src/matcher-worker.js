@@ -23,7 +23,7 @@ self.onmessage=async({data})=>{
     if(data.action==='finalize') {
       if(!Array.isArray(data.items)||data.items.length>200||!Array.isArray(data.matched)||data.matched.length!==data.items.length)throw new Error('Ongeldige mandjesopdracht.');
       const comparison=summarize(data.items,data.matched,data.options);
-      results=addStoreCombinations(applyLocations(comparison,data.origin,validateStores(data.stores),data.locationOptions));
+      results=addStoreCombinations(applyLocations(comparison,data.origin,validateStores(data.stores),data.locationOptions),{maxStores:data.locationOptions?.maxStores??2});
       // Candidate alternatives are needed only while allocating, not in the UI.
       results.baskets=results.baskets.map(({choiceRows,...basket})=>basket);
     } else if(data.action==='load') {
