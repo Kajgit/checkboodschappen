@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Vergelijk je boodschappen lokaal tussen Nederlandse supermarkten.">
+  <title>BoodschappenWijzer</title><link rel="stylesheet" href="/styles.css">
+</head>
+<body><div id="app">
+  <header class="shopping-header"><a class="brand" href="#top"><span class="mark small">B</span> BoodschappenWijzer</a><span class="local-label">Lokaal op deze Mac</span></header>
+  <main id="top" class="shell shopping-shell">
+    <div class="title-row"><div><p class="eyebrow">BOODSCHAPPEN</p><h1>Mijn lijst</h1><p>Vergelijk de totaalprijs bij een of twee winkels.</p></div></div>
+    <article class="smart-list">
+      <div class="smart-list-copy"><p class="eyebrow">SNEL TOEVOEGEN</p><h2>Plak een boodschappenlijst</h2><p>Controleer de producten en hoeveelheden voordat je ze toevoegt.</p></div>
+      <label>Aantal personen<input id="ai-people" type="number" min="1" max="12" value="4"></label>
+      <label class="smart-list-text">Lijst<textarea id="ai-list" rows="7" placeholder="Halfvolle melk&#10;Griekse yoghurt&#10;Brood&#10;Sperziebonen&#10;Hamburgers"></textarea></label>
+      <label class="ai-opt-in"><input id="use-local-ai" type="checkbox"> Extra suggesties van lokale AI (langzamer)</label><button id="interpret-list" class="primary">Controleren</button><div id="ai-suggestions" class="ai-suggestions" hidden></div>
+    </article>
+    <div class="shop-layout"><article>
+      <form id="item-form" class="product-picker">
+        <div class="basics"><strong>Basisproducten</strong><div class="basic-products">
+          <button type="button" data-basic="Halfvolle melk" data-unit="liter">Halfvolle melk</button><button type="button" data-basic="Bruinbrood" data-unit="stuk">Bruinbrood</button><button type="button" data-basic="Jonge kaas 48+ stuk" data-unit="kg">Jonge kaas</button><button type="button" data-basic="Kipfilet" data-unit="kg">Kipfilet</button><button type="button" data-basic="Witte bolletjes" data-unit="stuk">Witte bolletjes</button>
+        </div></div>
+        <label class="search-label">Product zoeken<input id="item-query" placeholder="Bijv. Campina halfvolle melk" autocomplete="off" required></label>
+        <div id="product-results" class="product-results" hidden></div><div id="selected-product" class="selected-product" hidden></div>
+        <div class="item-actions"><label>Hoeveelheid<input id="item-qty" type="number" value="1" min="0.1" step="0.1"></label><label>Eenheid<select id="item-unit"><option>stuk</option><option>verpakking</option><option>g</option><option>kg</option><option>ml</option><option>liter</option></select></label><button class="primary">Op lijst zetten</button></div>
+        <label id="alternatives-label" class="alternatives" hidden><span><input id="allow-alternatives" type="checkbox"> Vergelijk gelijkwaardige producten</span><small>Het gekozen artikel blijft de voorkeur bij deze winkel.</small></label>
+      </form>
+      <div class="list-toolbar"><div><h2>Mijn lijst <span id="item-count" class="count-badge">0</span></h2><p id="list-summary">Voeg producten toe om te vergelijken.</p></div><button id="clear-items" class="danger-secondary" type="button" hidden>Lijst leegmaken</button></div><div id="items" aria-live="polite"></div>
+    </article><aside class="compare-box"><p class="eyebrow">PRIJS EN REIS</p><h2>Vergelijken</h2><p class="compare-intro">Bekijk de goedkoopste complete opties.</p><label>Postcode<input id="postcode" placeholder="1234 AB" autocomplete="postal-code"></label><label>Kosten per kilometer<input id="cost-km" type="number" value="0.25" min="0" step="0.01"></label><button id="compare" class="primary">Vergelijk mijn lijst</button><div id="compare-status" class="compare-status" hidden><span class="spinner"></span><span><strong>Prijzen vergelijken</strong><small>Producten, verpakkingen en routes controleren.</small></span></div><p class="fineprint">Je lijst blijft lokaal. Alleen productzoekopdrachten en je postcode gaan naar de prijs- en routebronnen.</p></aside></div>
+    <div id="scenarios" class="scenarios"></div>
+  </main><div id="toast" role="status" aria-live="polite"></div>
+</div><dialog id="modal"><form method="dialog"><button class="dialog-close" value="cancel" aria-label="Sluiten">×</button><div id="modal-content"></div></form></dialog><script src="/app.js" defer></script></body></html>

@@ -1,0 +1,62 @@
+bzip2 1.0.6 source notices
+
+Source archive: https://codeload.github.com/emscripten-ports/bzip2/tar.gz/refs/tags/1.0.6
+Conservative source-scope inclusion; not every optional/platform file is linked.
+Source comments are unchanged, grouped with their original paths.
+Top-level component licence is included separately.
+
+blocksort.c
+bzip2.c
+bzip2recover.c
+bzlib.c
+bzlib.h
+bzlib_private.h
+compress.c
+crctable.c
+decompress.c
+huffman.c
+mk251.c
+randtable.c
+unzcrash.c
+
+/* ------------------------------------------------------------------
+   This file is part of bzip2/libbzip2, a program and library for
+   lossless, block-sorting data compression.
+
+   bzip2/libbzip2 version 1.0.6 of 6 September 2010
+   Copyright (C) 1996-2010 Julian Seward <jseward@bzip.org>
+
+   Please read the WARNING, DISCLAIMER and PATENTS sections in the 
+   README file.
+
+   This program is released under the terms of the license contained
+   in the file LICENSE.
+   ------------------------------------------------------------------ */
+
+dlltest.c
+
+/*
+   minibz2
+      libbz2.dll test program.
+      by Yoshioka Tsuneo (tsuneo@rr.iij4u.or.jp)
+      This file is Public Domain.  Welcome any email to me.
+
+   usage: minibz2 [-d] [-{1,2,..9}] [[srcfilename] destfilename]
+*/
+
+spewG.c
+
+/* ------------------------------------------------------------------
+   This file is part of bzip2/libbzip2, a program and library for
+   lossless, block-sorting data compression.
+
+   bzip2/libbzip2 version 1.0.6 of 6 September 2010
+   Copyright (C) 1996-2010 Julian Seward <jseward@bzip.org>
+
+   Please read the WARNING, DISCLAIMER and PATENTS sections in the 
+   README file.
+
+   This program is released under the terms of the license contained
+   in the file LICENSE.
+	 ------------------------------------------------------------------ */
+

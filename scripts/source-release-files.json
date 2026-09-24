@@ -1,0 +1,590 @@
+[
+  {
+    "source": ".gitignore",
+    "target": ".gitignore"
+  },
+  {
+    "source": "LICENSE",
+    "target": "LICENSE"
+  },
+  {
+    "source": "app/__init__.py",
+    "target": "app/__init__.py"
+  },
+  {
+    "source": "app/config.py",
+    "target": "app/config.py"
+  },
+  {
+    "source": "app/db.py",
+    "target": "app/db.py"
+  },
+  {
+    "source": "app/groceries.py",
+    "target": "app/groceries.py"
+  },
+  {
+    "source": "app/launcher.py",
+    "target": "app/launcher.py"
+  },
+  {
+    "source": "app/list_ai.py",
+    "target": "app/list_ai.py"
+  },
+  {
+    "source": "app/main.py",
+    "target": "app/main.py"
+  },
+  {
+    "source": "app/matching_ai.py",
+    "target": "app/matching_ai.py"
+  },
+  {
+    "source": "app/product_facts.py",
+    "target": "app/product_facts.py"
+  },
+  {
+    "source": "app/product_identity.py",
+    "target": "app/product_identity.py"
+  },
+  {
+    "source": "app/product_text.py",
+    "target": "app/product_text.py"
+  },
+  {
+    "source": "app/receipt.py",
+    "target": "app/receipt.py"
+  },
+  {
+    "source": "app/semantic_review.py",
+    "target": "app/semantic_review.py"
+  },
+  {
+    "source": "app/static/app.js",
+    "target": "app/static/app.js"
+  },
+  {
+    "source": "app/static/index.html",
+    "target": "app/static/index.html"
+  },
+  {
+    "source": "app/static/styles.css",
+    "target": "app/static/styles.css"
+  },
+  {
+    "source": "public-site/licenses/README.txt",
+    "target": "public-site/licenses/README.txt"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-LICENSE.txt",
+    "target": "public-site/licenses/cpython-3.14.2-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-musl-COPYRIGHT.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-musl-COPYRIGHT.txt"
+  },
+  {
+    "source": "public-site/licenses/provenance.json",
+    "target": "public-site/licenses/provenance.json"
+  },
+  {
+    "source": "public-site/licenses/pyodide-314.0.7-MPL-2.0.txt",
+    "target": "public-site/licenses/pyodide-314.0.7-MPL-2.0.txt"
+  },
+  {
+    "source": "public-site/package-lock.json",
+    "target": "public-site/package-lock.json"
+  },
+  {
+    "source": "public-site/package.json",
+    "target": "public-site/package.json"
+  },
+  {
+    "source": "public-site/python/bridge.py",
+    "target": "public-site/python/bridge.py"
+  },
+  {
+    "source": "public-site/scripts/benchmark-matcher.js",
+    "target": "public-site/scripts/benchmark-matcher.js"
+  },
+  {
+    "source": "public-site/scripts/build-assets.js",
+    "target": "public-site/scripts/build-assets.js"
+  },
+  {
+    "source": "public-site/scripts/build-locations.py",
+    "target": "public-site/scripts/build-locations.py"
+  },
+  {
+    "source": "public-site/scripts/build-matcher.py",
+    "target": "public-site/scripts/build-matcher.py"
+  },
+  {
+    "source": "public-site/scripts/build-notices.js",
+    "target": "public-site/scripts/build-notices.js"
+  },
+  {
+    "source": "public-site/scripts/replay-lists.js",
+    "target": "public-site/scripts/replay-lists.js"
+  },
+  {
+    "source": "public-site/server/provider-service.js",
+    "target": "public-site/server/provider-service.js"
+  },
+  {
+    "source": "public-site/server/worker.js",
+    "target": "public-site/server/worker.js"
+  },
+  {
+    "source": "public-site/src/checkjebon.js",
+    "target": "public-site/src/checkjebon.js"
+  },
+  {
+    "source": "public-site/src/comparison.js",
+    "target": "public-site/src/comparison.js"
+  },
+  {
+    "source": "public-site/src/list-input.js",
+    "target": "public-site/src/list-input.js"
+  },
+  {
+    "source": "public-site/src/list-store.js",
+    "target": "public-site/src/list-store.js"
+  },
+  {
+    "source": "public-site/src/locations.js",
+    "target": "public-site/src/locations.js"
+  },
+  {
+    "source": "public-site/src/matcher-client.js",
+    "target": "public-site/src/matcher-client.js"
+  },
+  {
+    "source": "public-site/src/matcher-worker.js",
+    "target": "public-site/src/matcher-worker.js"
+  },
+  {
+    "source": "public-site/src/prijsprofeet.js",
+    "target": "public-site/src/prijsprofeet.js"
+  },
+  {
+    "source": "public-site/src/python-matcher.js",
+    "target": "public-site/src/python-matcher.js"
+  },
+  {
+    "source": "public-site/src/receipt-model.js",
+    "target": "public-site/src/receipt-model.js"
+  },
+  {
+    "source": "public-site/src/receipt.js",
+    "target": "public-site/src/receipt.js"
+  },
+  {
+    "source": "public-site/src/store-combinations.js",
+    "target": "public-site/src/store-combinations.js"
+  },
+  {
+    "source": "public-site/tests/comparison.test.js",
+    "target": "public-site/tests/comparison.test.js"
+  },
+  {
+    "source": "public-site/tests/list-input.test.js",
+    "target": "public-site/tests/list-input.test.js"
+  },
+  {
+    "source": "public-site/tests/list-store.test.js",
+    "target": "public-site/tests/list-store.test.js"
+  },
+  {
+    "source": "public-site/tests/locations.test.js",
+    "target": "public-site/tests/locations.test.js"
+  },
+  {
+    "source": "public-site/tests/matcher-cases.js",
+    "target": "public-site/tests/matcher-cases.js"
+  },
+  {
+    "source": "public-site/tests/prijsprofeet.test.js",
+    "target": "public-site/tests/prijsprofeet.test.js"
+  },
+  {
+    "source": "public-site/tests/provider-service.test.js",
+    "target": "public-site/tests/provider-service.test.js"
+  },
+  {
+    "source": "public-site/tests/receipt-model.test.js",
+    "target": "public-site/tests/receipt-model.test.js"
+  },
+  {
+    "source": "public-site/tests/store-combinations.test.js",
+    "target": "public-site/tests/store-combinations.test.js"
+  },
+  {
+    "source": "public-site/tests/worker-runtime.test.js",
+    "target": "public-site/tests/worker-runtime.test.js"
+  },
+  {
+    "source": "public-site/ui/index.html",
+    "target": "public-site/ui/index.html"
+  },
+  {
+    "source": "public-site/ui/style.css",
+    "target": "public-site/ui/style.css"
+  },
+  {
+    "source": "public-site/wrangler.jsonc",
+    "target": "public-site/wrangler.jsonc"
+  },
+  {
+    "source": "pyproject.toml",
+    "target": "pyproject.toml"
+  },
+  {
+    "source": "run.py",
+    "target": "run.py"
+  },
+  {
+    "source": "scripts/build_source_release.py",
+    "target": "scripts/build_source_release.py"
+  },
+  {
+    "source": "tests/fixtures/independent-list/manifest.json",
+    "target": "tests/fixtures/independent-list/manifest.json"
+  },
+  {
+    "source": "tests/fixtures/independent-list/shopping-list.txt",
+    "target": "tests/fixtures/independent-list/shopping-list.txt"
+  },
+  {
+    "source": "tests/fixtures/product_identity_cases.json",
+    "target": "tests/fixtures/product_identity_cases.json"
+  },
+  {
+    "source": "tests/test_api.py",
+    "target": "tests/test_api.py"
+  },
+  {
+    "source": "tests/test_groceries.py",
+    "target": "tests/test_groceries.py"
+  },
+  {
+    "source": "tests/test_list_ai.py",
+    "target": "tests/test_list_ai.py"
+  },
+  {
+    "source": "tests/test_migrations.py",
+    "target": "tests/test_migrations.py"
+  },
+  {
+    "source": "tests/test_receipt.py",
+    "target": "tests/test_receipt.py"
+  },
+  {
+    "source": "tests/test_semantic_review.py",
+    "target": "tests/test_semantic_review.py"
+  },
+  {
+    "source": "public-site/src/basket-allocation.js",
+    "target": "public-site/src/basket-allocation.js"
+  },
+  {
+    "source": "public-site/tests/basket-allocation.test.js",
+    "target": "public-site/tests/basket-allocation.test.js"
+  },
+  {
+    "source": "public-site/ui/privacy.html",
+    "target": "public-site/ui/privacy.html"
+  },
+  {
+    "source": "public-site/licenses/zlib-1.3.1-LICENSE.txt",
+    "target": "public-site/licenses/zlib-1.3.1-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/expat-2.7.3-COPYING.txt",
+    "target": "public-site/licenses/expat-2.7.3-COPYING.txt"
+  },
+  {
+    "source": "public-site/licenses/libffi-f08493d-LICENSE.txt",
+    "target": "public-site/licenses/libffi-f08493d-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/hiwire-6a1e672-LICENSE.txt",
+    "target": "public-site/licenses/hiwire-6a1e672-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/zstd-1.5.7-LICENSE.txt",
+    "target": "public-site/licenses/zstd-1.5.7-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/xz-5.2.2-COPYING.txt",
+    "target": "public-site/licenses/xz-5.2.2-COPYING.txt"
+  },
+  {
+    "source": "public-site/licenses/bzip2-1.0.6-LICENSE.txt",
+    "target": "public-site/licenses/bzip2-1.0.6-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-compiler-rt-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-compiler-rt-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-libcxx-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-libcxx-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-libcxxabi-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-libcxxabi-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-libunwind-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-libunwind-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-llvm-libc-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-llvm-libc-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-mini-lz4-NOTICE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-mini-lz4-NOTICE.txt"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-mpdecimal-NOTICE.txt",
+    "target": "public-site/licenses/cpython-3.14.2-mpdecimal-NOTICE.txt"
+  },
+  {
+    "source": "public-site/licenses/sqlite-3.39.0-NOTICE.txt",
+    "target": "public-site/licenses/sqlite-3.39.0-NOTICE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-dlmalloc-NOTICE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-dlmalloc-NOTICE.txt"
+  },
+  {
+    "source": "public-site/server/sqlite-storage.js",
+    "target": "public-site/server/sqlite-storage.js"
+  },
+  {
+    "source": "public-site/tests/sqlite-storage.test.js",
+    "target": "public-site/tests/sqlite-storage.test.js"
+  },
+  {
+    "source": "public-site/server/coordinator-host.js",
+    "target": "public-site/server/coordinator-host.js"
+  },
+  {
+    "source": "public-site/tests/coordinator-host.test.js",
+    "target": "public-site/tests/coordinator-host.test.js"
+  },
+  {
+    "source": "public-site/server/node-server.js",
+    "target": "public-site/server/node-server.js"
+  },
+  {
+    "source": "public-site/tests/node-server.test.js",
+    "target": "public-site/tests/node-server.test.js"
+  },
+  {
+    "source": "public-site/server/start-node.js",
+    "target": "public-site/server/start-node.js"
+  },
+  {
+    "source": "public-site/licenses/runtime-assets.json",
+    "target": "public-site/licenses/runtime-assets.json"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-musl-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-musl-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "tests/test_catalogue_batching.py",
+    "target": "tests/test_catalogue_batching.py"
+  },
+  {
+    "source": "public-site/scripts/verify-catalogue-loading.js",
+    "target": "public-site/scripts/verify-catalogue-loading.js"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-INCORPORATED-LICENSES.txt",
+    "target": "public-site/licenses/cpython-3.14.2-INCORPORATED-LICENSES.txt"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-HACL-SHA2-NOTICE.txt",
+    "target": "public-site/licenses/cpython-3.14.2-HACL-SHA2-NOTICE.txt"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-HACL-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/cpython-3.14.2-HACL-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/tests/matcher-client.test.js",
+    "target": "public-site/tests/matcher-client.test.js"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-mpdecimal-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/cpython-3.14.2-mpdecimal-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/libffi-f08493d-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/libffi-f08493d-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/zlib-1.3.1-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/zlib-1.3.1-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/expat-2.7.3-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/expat-2.7.3-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/bzip2-1.0.6-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/bzip2-1.0.6-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/zstd-1.5.7-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/zstd-1.5.7-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/xz-5.2.2-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/xz-5.2.2-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/cpython-3.14.2-CORE-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/cpython-3.14.2-CORE-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/tomli-MIT-NOTICE.txt",
+    "target": "public-site/licenses/tomli-MIT-NOTICE.txt"
+  },
+  {
+    "source": "public-site/licenses/unicode-LICENSE-V3.txt",
+    "target": "public-site/licenses/unicode-LICENSE-V3.txt"
+  },
+  {
+    "source": "public-site/licenses/unicode-16.0.0-README.txt",
+    "target": "public-site/licenses/unicode-16.0.0-README.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-RUNTIME-SOURCE-NOTICES.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-RUNTIME-SOURCE-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-AUTHORS.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-AUTHORS.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-system-lib-compiler-rt-CREDITS.TXT.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-system-lib-compiler-rt-CREDITS.TXT.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-system-lib-libcxx-CREDITS.TXT.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-system-lib-libcxx-CREDITS.TXT.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-system-lib-libcxxabi-CREDITS.TXT.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-system-lib-libcxxabi-CREDITS.TXT.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-system-lib-mimalloc-LICENSE.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-system-lib-mimalloc-LICENSE.txt"
+  },
+  {
+    "source": "public-site/licenses/emscripten-5.0.3-ROOT-JS-NOTICES.txt",
+    "target": "public-site/licenses/emscripten-5.0.3-ROOT-JS-NOTICES.txt"
+  },
+  {
+    "source": "public-site/licenses/pyodide-314.0.7-stackframe-LICENSE.txt",
+    "target": "public-site/licenses/pyodide-314.0.7-stackframe-LICENSE.txt"
+  },
+  {
+    "source": "public-site/scripts/verify-selfhost-tls.js",
+    "target": "public-site/scripts/verify-selfhost-tls.js"
+  },
+  {
+    "source": "public-site/src/app.jsx",
+    "target": "public-site/src/app.jsx"
+  },
+  {
+    "source": "public-site/src/reasons.js",
+    "target": "public-site/src/reasons.js"
+  },
+  {
+    "source": "public-site/src/lib/utils.js",
+    "target": "public-site/src/lib/utils.js"
+  },
+  {
+    "source": "public-site/src/components/ui/button.tsx",
+    "target": "public-site/src/components/ui/button.tsx"
+  },
+  {
+    "source": "public-site/src/components/ui/input.tsx",
+    "target": "public-site/src/components/ui/input.tsx"
+  },
+  {
+    "source": "public-site/src/components/ui/textarea.tsx",
+    "target": "public-site/src/components/ui/textarea.tsx"
+  },
+  {
+    "source": "public-site/licenses/shadcn-MIT.txt",
+    "target": "public-site/licenses/shadcn-MIT.txt"
+  },
+  {
+    "source": "public-site/components.json",
+    "target": "public-site/components.json"
+  },
+  {
+    "source": "public-site/tsconfig.json",
+    "target": "public-site/tsconfig.json"
+  },
+  {
+    "source": "public-site/src/list-interpretation.js",
+    "target": "public-site/src/list-interpretation.js"
+  },
+  {
+    "source": "public-site/tests/list-interpretation.test.js",
+    "target": "public-site/tests/list-interpretation.test.js"
+  },
+  {
+    "source": "public-site/src/links.js",
+    "target": "public-site/src/links.js"
+  },
+  {
+    "source": "public-site/tests/links.test.js",
+    "target": "public-site/tests/links.test.js"
+  },
+  {
+    "source": "public-site/ui/favicon.png",
+    "target": "public-site/ui/favicon.png"
+  },
+  {
+    "source": "README.md",
+    "target": "README.md"
+  },
+  {
+    "source": "scripts/source-release-files.json",
+    "target": "scripts/source-release-files.json"
+  },
+  {
+    "source": "public-site/licenses/runtime-source.txt",
+    "target": "public-site/licenses/runtime-source.txt"
+  },
+  {
+    "source": "public-site/licenses/native-runtime-audit.txt",
+    "target": "public-site/licenses/native-runtime-audit.txt"
+  },
+  {
+    "source": "public-site/ui/roadmap.html",
+    "target": "public-site/ui/roadmap.html"
+  },
+  {
+    "source": "public-site/ui/roadmap.css",
+    "target": "public-site/ui/roadmap.css"
+  },
+  {
+    "source": "scripts/build_macos.sh",
+    "target": "scripts/build_macos.sh"
+  }
+]

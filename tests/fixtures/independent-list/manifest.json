@@ -1,0 +1,124 @@
+{
+  "seed": 73519,
+  "people": 4,
+  "recipes": [
+    "Zalm met broccoli en aardappelen",
+    "Spaghetti bolognese",
+    "Noedels met tofu"
+  ],
+  "rows": [
+    {
+      "group": "Zalm met broccoli en aardappelen",
+      "line": "600 g zalmfilet"
+    },
+    {
+      "group": "Zalm met broccoli en aardappelen",
+      "line": "800 g broccoli"
+    },
+    {
+      "group": "Zalm met broccoli en aardappelen",
+      "line": "1 kg aardappelen"
+    },
+    {
+      "group": "Zalm met broccoli en aardappelen",
+      "line": "1 stuk citroen"
+    },
+    {
+      "group": "Zalm met broccoli en aardappelen",
+      "line": "150 g crème fraîche"
+    },
+    {
+      "group": "Zalm met broccoli en aardappelen",
+      "line": "15 g dille"
+    },
+    {
+      "group": "Spaghetti bolognese",
+      "line": "400 g spaghetti"
+    },
+    {
+      "group": "Spaghetti bolognese",
+      "line": "500 g rundergehakt"
+    },
+    {
+      "group": "Spaghetti bolognese",
+      "line": "700 ml passata"
+    },
+    {
+      "group": "Spaghetti bolognese",
+      "line": "2 stuks ui"
+    },
+    {
+      "group": "Spaghetti bolognese",
+      "line": "150 g winterpeen"
+    },
+    {
+      "group": "Spaghetti bolognese",
+      "line": "100 g Parmezaanse kaas"
+    },
+    {
+      "group": "Noedels met tofu",
+      "line": "250 g noedels"
+    },
+    {
+      "group": "Noedels met tofu",
+      "line": "400 g tofu"
+    },
+    {
+      "group": "Noedels met tofu",
+      "line": "500 g paksoi"
+    },
+    {
+      "group": "Noedels met tofu",
+      "line": "200 g wortelen"
+    },
+    {
+      "group": "Noedels met tofu",
+      "line": "100 ml sojasaus"
+    },
+    {
+      "group": "Noedels met tofu",
+      "line": "20 g sesamzaad"
+    },
+    {
+      "group": "Dagelijkse boodschappen",
+      "line": "500 g havermout"
+    },
+    {
+      "group": "Dagelijkse boodschappen",
+      "line": "500 g koffiebonen"
+    },
+    {
+      "group": "Dagelijkse boodschappen",
+      "line": "1 verpakking pindakaas"
+    },
+    {
+      "group": "Dagelijkse boodschappen",
+      "line": "10 stuks eieren"
+    },
+    {
+      "group": "Dagelijkse boodschappen",
+      "line": "6 stuks bananen"
+    },
+    {
+      "group": "Dagelijkse boodschappen",
+      "line": "1 kg appels"
+    },
+    {
+      "group": "Bijzondere producten",
+      "line": "1 verpakking jackfruit"
+    },
+    {
+      "group": "Bijzondere producten",
+      "line": "1 verpakking misopasta"
+    },
+    {
+      "group": "Bijzondere producten",
+      "line": "100 g gedroogde shiitake"
+    },
+    {
+      "group": "Bijzondere producten",
+      "line": "1 verpakking zwarte knoflook"
+    }
+  ],
+  "note": "Vastgelegd vóór uitvoering; geen aanpassing aan gevonden bronproducten."
+}

@@ -1,0 +1,78 @@
+# Browser runtime notice audit
+
+24 September 2026. The runtime component notice review is **complete for the
+pinned artifacts**. This records the scoped source review and generated-output
+verification; it does not close provider, hosting or overall publication gates.
+
+## Artifact and source identity
+
+The application serves five unmodified files from Pyodide 314.0.7. Their sizes
+and SHA-256 hashes are pinned in `public-site/licenses/runtime-assets.json`.
+The asset build verifies both installed inputs and copied output. Runtime metadata
+identifies CPython 3.14.2 and Emscripten 5.0.3. Exact notice source URLs, hashes,
+extraction rules and source-file inventories are in
+`public-site/licenses/provenance.json`.
+
+The pinned [Pyodide build flags](https://github.com/pyodide/pyodide/blob/314.0.7/Makefile.envs)
+and [CPython dependency build](https://github.com/pyodide/pyodide/blob/314.0.7/cpython/Makefile)
+identify the native dependencies. A Python builtin-module list alone does not
+prove all linked dependencies or their notices.
+
+## Evidence by component
+
+| Component | Included evidence | Review outcome |
+| --- | --- | --- |
+| Pyodide and hiwire | MPL text, exact source trees and build-source links | Pinned recursive-checkout instructions, CPython/Emscripten patch summary and hiwire source location documented in [runtime-source.md](runtime-source.md); vendored stackframe MIT notice retained |
+| CPython | Root licence, incorporated-software document, and 72 distinct source comments from 832 core/module C/header files (separate component scopes excluded) | Native source notice collection done. Served stdlib ZIP retains source comments; SPDX references are MIT (tomllib) and PSF plus MIT/Apache (asyncio), with full texts retained. Actual runtime Unicode16.0.0 verified; official data README and Unicode License V3 retained |
+| HACL | All 47 C/header files reviewed; three distinct comments preserved with paths/hashes; seven files without block notices checked for line-comment licence keywords | Component notice comparison done; optional SIMD inclusion is not asserted |
+| musl | COPYRIGHT plus 52 distinct source comments across 125 C/header files, including named math/regex/sort exceptions | Remaining musl headers/runtime files covered by the broader Emscripten source inventory |
+| SQLite 3.39.0 | Public-domain declaration from exact amalgamation archive, archive and member hashes | No outstanding notice extraction identified |
+| mpdecimal 2.5.1 | All 33 bundled C/header files inspected; two distinct source notices preserved, including Henry S. Warren arithmetic permission | Component source-notice comparison done |
+| zlib, Expat, bzip2, Zstandard, XZ/liblzma | Pinned root licences plus source notices: zlib root 27 files; Expat lib 19; bzip2 root 15; Zstandard lib 90; XZ liblzma/common 157. Comments and archive/file hashes preserved; Zstandard BSD option selected | Source-scope notice comparison done; optional/platform source inclusion is conservative, not proof of linkage |
+| libffi | Pinned top-level licence plus source notices from 14 shared/include/wasm32 files, including WebAssembly authors | Shared/WebAssembly source-notice comparison done; other CPU targets are outside the wasm32 scope |
+| Emscripten and compiler/C++ support | Top-level text plus compiler-rt, libc++, libc++abi, libunwind and llvm-libc licences, conservatively included | 4297 runtime/compiler files plus 37 root JS files inspected; source comments, AUTHORS/CREDITS and mimalloc licence retained. SDL reference traced as described below; component source-notice review done |
+| MiniLZ4 | Pinned source licence comment, extraction rule and source hash | No outstanding notice extraction identified |
+| Allocator | Pinned dlmalloc declaration; upstream default selection; binary exports include dlmalloc-specific footprint functions | Conservative Emscripten inventory also covers emmalloc and mimalloc sources; mimalloc root licence retained. No notice omission depends on choosing only the default allocator |
+| Bundled JavaScript | Actual esbuild inputs determine package notices; bundled pako zlib source notices included | Rebuilt on every asset build; review if dependencies change |
+
+Conservative inclusion can cover optional components without proving they are
+linked. It must be labelled that way. Avoid asserting that every source file is
+present in the binary, or that a successful integrity check proves licence
+completeness.
+
+## Verification and changes requiring review
+
+The final generated-output check found all 43 collected runtime notice texts
+byte-for-byte in THIRD-PARTY-NOTICES.txt (including original mixed newlines).
+All notice files are included in the explicit source-release inventory. Both
+installed and distributed copies of all five runtime assets match their pinned
+SHA-256 hashes and sizes. The generated vendor inventory records the same
+provenance plus six actual bundled JavaScript packages. The Pyodide and hiwire
+source links are present in the distributed credits. Local evidence is recorded
+in ignored output/diagnostics/runtime-notice-final-audit.json.
+
+The build's nativeComponentAuditComplete flag applies to this reviewed runtime
+and inventory. A runtime, source component, upstream patch or dependency change
+requires reopening the affected review, updating provenance and repeating the
+output checks. Integrity checks alone cannot establish new licence coverage.
+Source availability and build instructions were inspected, not a full upstream
+compiler rebuild. Optional/platform notices were included conservatively as
+stated in the component table. These are limits of the evidence, not claims of
+bit-for-bit reproducibility or an exhaustive binary linker map.
+
+## SDL compatibility reference
+
+The pinned [SDL JavaScript implementation](https://github.com/emscripten-core/emscripten/blob/5.0.3/src/lib/libsdl.js)
+uses MIT. The pinned [SDL header](https://github.com/emscripten-core/emscripten/blob/5.0.3/system/include/SDL/SDL.h)
+has a permissive copyright/permission notice; its separate API documentation
+paragraph mentions LGPL. Both comments were preserved by the conservative scan.
+The Pyodide build explicitly selects `-lsdl.js`, and the served JavaScript contains
+SDL_Init, SDL_SetVideoMode and SDL_PollEvent implementations. Inspection of the
+pinned WASM found no SDL-named imports and only one SDL-named export:
+SDL_GL_GetProcAddress. The matching [Emscripten compatibility shim](https://github.com/emscripten-core/emscripten/blob/5.0.3/system/lib/gl/libprocaddr.c)
+is MIT/NCSA code forwarding to emscripten_GetProcAddress. Its notice is included.
+
+Together these support treating the distributed implementation as Emscripten's
+compatibility code; the isolated documentation sentence is not evidence of a
+linked native LGPL SDL library. This is an inference from the pinned build and
+artifacts, not a general statement about all Emscripten/SDL configurations.

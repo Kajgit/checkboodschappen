@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "checkboodschappen",
+  "main": "server/worker.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": true,
+  "assets": {"directory": "./dist", "binding": "ASSETS", "run_worker_first": ["/api/*"]},
+  "durable_objects": {"bindings": [{"name": "COORDINATOR", "class_name": "ProviderCoordinator"}]},
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["ProviderCoordinator"]}],
+  "vars": {"PRIJSPROFEET_ENABLED": "true", "PUBLIC_APP_URL": "https://checkboodschappen.thenorthsolution-b.workers.dev"},
+  "observability": {"enabled": false}
+}

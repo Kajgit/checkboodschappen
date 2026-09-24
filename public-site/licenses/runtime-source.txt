@@ -1,0 +1,41 @@
+# Source for the distributed browser runtime
+
+The application copies five unmodified Pyodide 314.0.7 npm assets. Their exact
+identities are pinned in `public-site/licenses/runtime-assets.json`. Application
+Python rules are loaded separately and do not modify those runtime binaries.
+
+The corresponding Pyodide source, build scripts and upstream patches are available
+at the [314.0.7 source tag](https://github.com/pyodide/pyodide/tree/314.0.7).
+Follow the [build instructions at that same tag](https://github.com/pyodide/pyodide/blob/314.0.7/docs/development/building-from-sources.md),
+including its platform prerequisites and submodule setup. For example, obtain the
+pinned checkout with:
+
+```sh
+git clone --branch 314.0.7 --recurse-submodules https://github.com/pyodide/pyodide.git
+```
+
+The source archive alone does not populate Git submodules. Use the recursive
+checkout for rebuilding. Upstream documents `make` after setting up its build
+environment. We have inspected these instructions; we have not reproduced the
+entire upstream compiler/runtime build or established bit-for-bit reproducibility.
+
+The [CPython build script](https://github.com/pyodide/pyodide/blob/314.0.7/cpython/Makefile)
+pins dependency sources and applies its [nine CPython patches](https://github.com/pyodide/pyodide/tree/314.0.7/cpython/patches).
+They adapt entry-point visibility, 32-bit constants, JavaScript proxy interaction,
+Emscripten calls and trampolines, JSON jsnull handling, signal exports and a timezone
+data warning. The [Emscripten setup](https://github.com/pyodide/pyodide/blob/314.0.7/emsdk/Makefile)
+installs 5.0.3 and applies [five toolchain patches](https://github.com/pyodide/pyodide/tree/314.0.7/emsdk/patches)
+covering symbol errors, promise ordering, dynamic-library paths, PIC lookup and
+exclusion of the LLVM profile runtime. These are upstream changes, not changes
+made by this application.
+
+The same build pins [hiwire source commit 6a1e67280a15d929ebeceee54a6358c9c8d5f697](https://github.com/pyodide/hiwire/tree/6a1e67280a15d929ebeceee54a6358c9c8d5f697).
+Pyodide and hiwire use MPL-2.0; their full text and source locations are included
+in the distributed notices. Pyodide's vendored stackframe/error-stack-parser code
+has a separate MIT notice, also retained. Other runtime components retain their
+own licences; see [the component audit](native-runtime-audit.txt) and
+`public-site/licenses/provenance.json` for pinned sources and extraction details.
+
+These source instructions and notices belong with every distributed runtime build.
+Price datasets and store-location data have separate terms and are not relicensed
+by the application's MIT licence.

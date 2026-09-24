@@ -1,0 +1,40 @@
+{
+  "name": "boodschappenwijzer-public",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "build:matcher": "python3 scripts/build-matcher.py",
+    "benchmark:matcher": "npm run build:matcher && node scripts/benchmark-matcher.js",
+    "build:assets": "npm run build:matcher && node scripts/build-assets.js",
+    "dev": "wrangler dev --local --ip 127.0.0.1 --port 8787 --var PRIJSPROFEET_ENABLED:false",
+    "start": "node server/start-node.js",
+    "test:matcher-loading": "npm run build:matcher && node scripts/verify-catalogue-loading.js",
+    "test:selfhost-tls": "node scripts/verify-selfhost-tls.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "esbuild": "^0.28.2",
+    "fake-indexeddb": "^6.2.5",
+    "miniflare": "5.20260921.1-alpha",
+    "tailwindcss": "^4.3.3",
+    "wrangler": "^4.138.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/public-sans": "^5.3.0",
+    "@radix-ui/react-slot": "^1.3.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "fflate": "0.8.3",
+    "lucide-react": "^1.48.0",
+    "pdf-lib": "1.17.1",
+    "pyodide": "314.0.7",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tailwind-merge": "^3.7.0"
+  }
+}

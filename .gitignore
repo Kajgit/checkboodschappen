@@ -1,0 +1,36 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+build/
+dist/
+*.spec
+.pyinstaller-cache/
+.DS_Store
+
+# Private runtime state, credentials and diagnostic captures
+.env
+.env.*
+!.env.example
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+output/
+tmp/
+.playwright-cli/
+*.egg-info/
+node_modules/
+.wrangler/
+.dev.vars
+.dev.vars.*
+
+# Generated browser matcher contains code only; rebuild from the source modules
+public-site/generated/
+
+# Private self-host coordinator state and ownership lock
+.selfhost/
+*.sqlite.lock
+
+# Private household regression input
+tests/fixtures/household_list.txt

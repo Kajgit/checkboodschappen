@@ -1,0 +1,1 @@
+"""BoodschappenWijzer, een lokale supermarktvergelijker."""

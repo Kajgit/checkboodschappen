@@ -1,0 +1,1950 @@
+CPython 3.14.2 core and module source notices
+
+Source archive: https://codeload.github.com/python/cpython/tar.gz/refs/tags/v3.14.2
+Scope: Include, Modules, Objects, Parser, Python C/header files; excludes
+already separately inventoried HACL, mpdecimal and Expat trees and _test modules.
+Conservative inclusion covers optional/platform files without claiming linkage.
+Comments remain unchanged and identical comments are grouped with source paths.
+
+Include/codecs.h
+
+/* ------------------------------------------------------------------------
+
+   Python Codec Registry and support functions
+
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+   ------------------------------------------------------------------------ */
+
+Include/dynamic_annotations.h
+
+/* Copyright (c) 2008-2009, Google Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ---
+ * Author: Kostya Serebryany
+ * Copied to CPython by Jeffrey Yasskin, with all macros renamed to
+ * start with _Py_ to avoid colliding with users embedding Python, and
+ * with deprecated macros removed.
+ */
+
+Include/internal/mimalloc/mimalloc.h
+Include/internal/mimalloc/mimalloc/internal.h
+Include/internal/mimalloc/mimalloc/prim.h
+Include/internal/mimalloc/mimalloc/track.h
+Include/internal/mimalloc/mimalloc/types.h
+Objects/mimalloc/os.c
+Objects/mimalloc/prim/osx/prim.c
+Objects/mimalloc/prim/prim.c
+Objects/mimalloc/prim/unix/prim.c
+Objects/mimalloc/prim/wasi/prim.c
+Objects/mimalloc/prim/windows/prim.c
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2018-2023, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Include/internal/mimalloc/mimalloc/atomic.h
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2018-2023 Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Include/pymacro.h
+
+/* Assert a build-time dependency, as an expression.
+    *
+    * Your compile will fail if the condition isn't true, or can't be evaluated
+    * by the compiler. This can be used in an expression: its value is 0.
+    *
+    * Example:
+    *
+    * #define foo_to_char(foo)  \
+    *     ((char *)(foo)        \
+    *      + Py_BUILD_ASSERT_EXPR(offsetof(struct foo, string) == 0))
+    *
+    * Written by Rusty Russell, public domain, http://ccodearchive.net/
+    */
+
+Include/pymacro.h
+
+/* Get the number of elements in a visible array
+
+   This does not work on pointers, or arrays declared as [], or function
+   parameters. With correct compiler support, such usage will cause a build
+   error (see Py_BUILD_ASSERT_EXPR).
+
+   Written by Rusty Russell, public domain, http://ccodearchive.net/
+
+   Requires at GCC 3.1+ */
+
+Include/unicodeobject.h
+
+/*
+
+Unicode implementation based on original code by Fredrik Lundh,
+modified by Marc-Andre Lemburg (mal@lemburg.com) according to the
+Unicode Integration Proposal. (See
+http://www.egenix.com/files/python/unicode-proposal.txt).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+
+ Original header:
+ --------------------------------------------------------------------
+
+ * Yet another Unicode string type for Python.  This type supports the
+ * 16-bit Basic Multilingual Plane (BMP) only.
+ *
+ * Written by Fredrik Lundh, January 1999.
+ *
+ * Copyright (c) 1999 by Secret Labs AB.
+ * Copyright (c) 1999 by Fredrik Lundh.
+ *
+ * fredrik@pythonware.com
+ * http://www.pythonware.com
+ *
+ * --------------------------------------------------------------------
+ * This Unicode String Type is
+ *
+ * Copyright (c) 1999 by Secret Labs AB
+ * Copyright (c) 1999 by Fredrik Lundh
+ *
+ * By obtaining, using, and/or copying this software and/or its
+ * associated documentation, you agree that you have read, understood,
+ * and will comply with the following terms and conditions:
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * associated documentation for any purpose and without fee is hereby
+ * granted, provided that the above copyright notice appears in all
+ * copies, and that both that copyright notice and this permission notice
+ * appear in supporting documentation, and that the name of Secret Labs
+ * AB or the author not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior
+ * permission.
+ *
+ * SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO
+ * THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS.  IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * -------------------------------------------------------------------- */
+
+Modules/_codecsmodule.c
+
+/* ------------------------------------------------------------------------
+
+   _codecs -- Provides access to the codec registry and the builtin
+              codecs.
+
+   This module should never be imported directly. The standard library
+   module "codecs" wraps this builtin module for use within Python.
+
+   The codec registry is accessible via:
+
+     register(search_function) -> None
+
+     lookup(encoding) -> CodecInfo object
+
+   The builtin Unicode codecs use the following interface:
+
+     <encoding>_encode(Unicode_object[,errors='strict']) ->
+        (string object, bytes consumed)
+
+     <encoding>_decode(char_buffer_obj[,errors='strict']) ->
+        (Unicode object, bytes consumed)
+
+   These <encoding>s are available: utf_8, unicode_escape,
+   raw_unicode_escape, latin_1, ascii (7-bit), mbcs (on win32).
+
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+   ------------------------------------------------------------------------ */
+
+Modules/_cursesmodule.c
+
+/*
+ *   This is a curses module for Python.
+ *
+ *   Based on prior work by Lance Ellinghaus and Oliver Andrich
+ *   Version 1.2 of this module: Copyright 1994 by Lance Ellinghouse,
+ *    Cathedral City, California Republic, United States of America.
+ *
+ *   Version 1.5b1, heavily extended for ncurses by Oliver Andrich:
+ *   Copyright 1996,1997 by Oliver Andrich, Koblenz, Germany.
+ *
+ *   Tidied for Python 1.6, and currently maintained by <amk@amk.ca>.
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining
+ *   a copy of this source file to use, copy, modify, merge, or publish it
+ *   subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included
+ *   in all copies or in any new file that contains a substantial portion of
+ *   this file.
+ *
+ *   THE  AUTHOR  MAKES  NO  REPRESENTATIONS ABOUT  THE  SUITABILITY  OF
+ *   THE  SOFTWARE FOR  ANY  PURPOSE.  IT IS  PROVIDED  "AS IS"  WITHOUT
+ *   EXPRESS OR  IMPLIED WARRANTY.  THE AUTHOR DISCLAIMS  ALL WARRANTIES
+ *   WITH  REGARD TO  THIS  SOFTWARE, INCLUDING  ALL IMPLIED  WARRANTIES
+ *   OF   MERCHANTABILITY,  FITNESS   FOR  A   PARTICULAR  PURPOSE   AND
+ *   NON-INFRINGEMENT  OF THIRD  PARTY  RIGHTS. IN  NO  EVENT SHALL  THE
+ *   AUTHOR  BE LIABLE  TO  YOU  OR ANY  OTHER  PARTY  FOR ANY  SPECIAL,
+ *   INDIRECT,  OR  CONSEQUENTIAL  DAMAGES  OR  ANY  DAMAGES  WHATSOEVER
+ *   WHETHER IN AN  ACTION OF CONTRACT, NEGLIGENCE,  STRICT LIABILITY OR
+ *   ANY OTHER  ACTION ARISING OUT OF  OR IN CONNECTION WITH  THE USE OR
+ *   PERFORMANCE OF THIS SOFTWARE.
+ */
+
+Modules/_decimal/_decimal.c
+
+/*
+ * Copyright (c) 2008-2012 Stefan Krah. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+Modules/_decimal/docstrings.h
+
+/*
+ * Copyright (c) 2001 Python Software Foundation. All Rights Reserved.
+ * Modified and extended by Stefan Krah.
+ */
+
+Modules/_elementtree.c
+
+/*--------------------------------------------------------------------
+ * Licensed to PSF under a Contributor Agreement.
+ * See https://www.python.org/psf/license for licensing details.
+ *
+ * _elementtree - C accelerator for xml.etree.ElementTree
+ * Copyright (c) 1999-2009 by Secret Labs AB.  All rights reserved.
+ * Copyright (c) 1999-2009 by Fredrik Lundh.
+ *
+ * info@pythonware.com
+ * http://www.pythonware.com
+ *--------------------------------------------------------------------
+ */
+
+Modules/_functoolsmodule.c
+
+/* _functools module written and maintained
+   by Hye-Shik Chang <perky@FreeBSD.org>
+   with adaptations by Raymond Hettinger <python@rcn.com>
+   Copyright (c) 2004 Python Software Foundation.
+   All rights reserved.
+*/
+
+Modules/_hashopenssl.c
+
+/*
+ * Copyright (C) 2005-2010   Gregory P. Smith (greg@krypto.org)
+ * Licensed to PSF under a Contributor Agreement.
+ *
+ * Derived from a skeleton of shamodule.c containing work performed by:
+ *
+ * Andrew Kuchling (amk@amk.ca)
+ * Greg Stein (gstein@lyra.org)
+ *
+ */
+
+Modules/_localemodule.c
+
+/***********************************************************
+Copyright (C) 1997, 2002, 2003, 2007, 2008 Martin von Loewis
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies.
+
+This software comes with no warranty. Use at your own risk.
+
+******************************************************************/
+
+Modules/_multiprocessing/multiprocessing.c
+
+/*
+ * Extension module used by multiprocessing package
+ *
+ * multiprocessing.c
+ *
+ * Copyright (c) 2006-2008, R Oudkerk
+ * Licensed to PSF under a Contributor Agreement.
+ */
+
+Modules/_multiprocessing/semaphore.c
+
+/*
+ * A type which wraps a semaphore
+ *
+ * semaphore.c
+ *
+ * Copyright (c) 2006-2008, R Oudkerk
+ * Licensed to PSF under a Contributor Agreement.
+ */
+
+Modules/_randommodule.c
+
+/* ------------------------------------------------------------------
+   The code in this module was based on a download from:
+      http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html
+
+   It was modified in 2002 by Raymond Hettinger as follows:
+
+    * the principal computational lines untouched.
+
+    * renamed genrand_res53() to random_random() and wrapped
+      in python calling/return code.
+
+    * genrand_uint32() and the helper functions, init_genrand()
+      and init_by_array(), were declared static, wrapped in
+      Python calling/return code.  also, their global data
+      references were replaced with structure references.
+
+    * unused functions from the original were deleted.
+      new, original C python code was added to implement the
+      Random() interface.
+
+   The following are the verbatim comments from the original code:
+
+   A C-program for MT19937, with initialization improved 2002/1/26.
+   Coded by Takuji Nishimura and Makoto Matsumoto.
+
+   Before using, initialize the state by using init_genrand(seed)
+   or init_by_array(init_key, key_length).
+
+   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+     1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+     3. The names of its contributors may not be used to endorse or promote
+    products derived from this software without specific prior written
+    permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+   Any feedback is very welcome.
+   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
+   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+*/
+
+Modules/_sqlite/connection.c
+
+/* connection.c - the connection type
+ *
+ * Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/connection.h
+
+/* connection.h - definitions for the connection type
+ *
+ * Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/cursor.c
+
+/* cursor.c - the cursor type
+ *
+ * Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/cursor.h
+
+/* cursor.h - definitions for the cursor type
+ *
+ * Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/microprotocols.c
+
+/* microprotocols.c - minimalist and non-validating protocols implementation
+ *
+ * Copyright (C) 2003-2004 Federico Di Gregorio <fog@debian.org>
+ *
+ * This file is part of psycopg and was adapted for pysqlite. Federico Di
+ * Gregorio gave the permission to use it within pysqlite under the following
+ * license:
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/microprotocols.h
+
+/* microprotocols.c - definitions for minimalist and non-validating protocols
+ *
+ * Copyright (C) 2003-2004 Federico Di Gregorio <fog@debian.org>
+ *
+ * This file is part of psycopg and was adapted for pysqlite. Federico Di
+ * Gregorio gave the permission to use it within pysqlite under the following
+ * license:
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/module.c
+
+/* module.c - the module itself
+ *
+ * Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/module.h
+
+/* module.h - definitions for the module
+ *
+ * Copyright (C) 2004-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/prepare_protocol.c
+
+/* prepare_protocol.c - the protocol for preparing values for SQLite
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/prepare_protocol.h
+
+/* prepare_protocol.h - the protocol for preparing values for SQLite
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/row.c
+
+/* row.c - an enhanced tuple for database rows
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/row.h
+
+/* row.h - an enhanced tuple for database rows
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/statement.c
+
+/* statement.c - the statement type
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/statement.h
+
+/* statement.h - definitions for the statement type
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/util.c
+
+/* util.c - various utility functions
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sqlite/util.h
+
+/* util.h - various utility functions
+ *
+ * Copyright (C) 2005-2010 Gerhard Häring <gh@ghaering.de>
+ *
+ * This file is part of pysqlite.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+Modules/_sre/sre.c
+
+/*
+ * Secret Labs' Regular Expression Engine
+ *
+ * regular expression matching engine
+ *
+ * partial history:
+ * 1999-10-24 fl   created (based on existing template matcher code)
+ * 2000-03-06 fl   first alpha, sort of
+ * 2000-08-01 fl   fixes for 1.6b1
+ * 2000-08-07 fl   use PyOS_CheckStack() if available
+ * 2000-09-20 fl   added expand method
+ * 2001-03-20 fl   lots of fixes for 2.1b2
+ * 2001-04-15 fl   export copyright as Python attribute, not global
+ * 2001-04-28 fl   added __copy__ methods (work in progress)
+ * 2001-05-14 fl   fixes for 1.5.2 compatibility
+ * 2001-07-01 fl   added BIGCHARSET support (from Martin von Loewis)
+ * 2001-10-18 fl   fixed group reset issue (from Matthew Mueller)
+ * 2001-10-20 fl   added split primitive; re-enable unicode for 1.6/2.0/2.1
+ * 2001-10-21 fl   added sub/subn primitive
+ * 2001-10-24 fl   added finditer primitive (for 2.2 only)
+ * 2001-12-07 fl   fixed memory leak in sub/subn (Guido van Rossum)
+ * 2002-11-09 fl   fixed empty sub/subn return type
+ * 2003-04-18 mvl  fully support 4-byte codes
+ * 2003-10-17 gn   implemented non recursive scheme
+ * 2013-02-04 mrab added fullmatch primitive
+ *
+ * Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
+ *
+ * This version of the SRE library can be redistributed under CNRI's
+ * Python 1.6 license.  For any other use, please contact Secret Labs
+ * AB (info@pythonware.com).
+ *
+ * Portions of this engine have been developed in cooperation with
+ * CNRI.  Hewlett-Packard provided funding for 1.6 integration and
+ * other compatibility work.
+ */
+
+Modules/_sre/sre.h
+Modules/_sre/sre_lib.h
+
+/*
+ * Secret Labs' Regular Expression Engine
+ *
+ * regular expression matching engine
+ *
+ * Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
+ *
+ * See the sre.c file for information on usage and redistribution.
+ */
+
+Modules/_sre/sre_constants.h
+Modules/_sre/sre_targets.h
+
+/*
+ * Secret Labs' Regular Expression Engine
+ *
+ * regular expression matching engine
+ *
+ * Auto-generated by Tools/build/generate_sre_constants.py from
+ * Lib/re/_constants.py.
+ *
+ * Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
+ *
+ * See the sre.c file for information on usage and redistribution.
+ */
+
+Modules/_tkinter.c
+
+/***********************************************************
+Copyright (C) 1994 Steen Lumholt.
+
+                        All Rights Reserved
+
+******************************************************************/
+
+Modules/_winapi.c
+
+/*
+ * Support routines from the Windows API
+ *
+ * This module was originally created by merging PC/_subprocess.c with
+ * Modules/_multiprocessing/win32_functions.c.
+ *
+ * Copyright (c) 2004 by Fredrik Lundh <fredrik@pythonware.com>
+ * Copyright (c) 2004 by Secret Labs AB, http://www.pythonware.com
+ * Copyright (c) 2004 by Peter Astrand <astrand@lysator.liu.se>
+ *
+ * By obtaining, using, and/or copying this software and/or its
+ * associated documentation, you agree that you have read, understood,
+ * and will comply with the following terms and conditions:
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its associated documentation for any purpose and without fee is
+ * hereby granted, provided that the above copyright notice appears in
+ * all copies, and that both that copyright notice and this permission
+ * notice appear in supporting documentation, and that the name of the
+ * authors not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior
+ * permission.
+ *
+ * THE AUTHORS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ * CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ * NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ * WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ */
+
+Modules/addrinfo.h
+
+/*
+ * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the project nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+Modules/atexitmodule.c
+
+/*
+ *  atexit - allow programmer to define multiple exit functions to be executed
+ *  upon normal program termination.
+ *
+ *   Translated from atexit.py by Collin Winter.
+ +   Copyright 2007 Python Software Foundation.
+ */
+
+Modules/binascii.c
+
+/*  Crc - 32 BIT ANSI X3.66 CRC checksum files
+    Also known as: ISO 3307
+**********************************************************************|
+*                                                                    *|
+* Demonstration program to compute the 32-bit CRC used as the frame  *|
+* check sequence in ADCCP (ANSI X3.66, also known as FIPS PUB 71     *|
+* and FED-STD-1003, the U.S. versions of CCITT's X.25 link-level     *|
+* protocol).  The 32-bit FCS was added via the Federal Register,     *|
+* 1 June 1982, p.23798.  I presume but don't know for certain that   *|
+* this polynomial is or will be included in CCITT V.41, which        *|
+* defines the 16-bit CRC (often called CRC-CCITT) polynomial.  FIPS  *|
+* PUB 78 says that the 32-bit FCS reduces otherwise undetected       *|
+* errors by a factor of 10^-5 over 16-bit FCS.                       *|
+*                                                                    *|
+**********************************************************************|
+
+ Copyright (C) 1986 Gary S. Brown.  You may use this program, or
+ code or tables extracted from it, as desired without restriction.
+
+ First, the polynomial itself and its table of feedback terms.  The
+ polynomial is
+ X^32+X^26+X^23+X^22+X^16+X^12+X^11+X^10+X^8+X^7+X^5+X^4+X^2+X^1+X^0
+ Note that we take it "backwards" and put the highest-order term in
+ the lowest-order bit.  The X^32 term is "implied"; the LSB is the
+ X^31 term, etc.  The X^0 term (usually shown as "+1") results in
+ the MSB being 1.
+
+ Note that the usual hardware shift register implementation, which
+ is what we're using (we're merely optimizing it by doing eight-bit
+ chunks at a time) shifts bits into the lowest-order term.  In our
+ implementation, that means shifting towards the right.  Why do we
+ do it this way?  Because the calculated CRC must be transmitted in
+ order from highest-order term to lowest-order term.  UARTs transmit
+ characters in order from LSB to MSB.  By storing the CRC this way,
+ we hand it to the UART in the order low-byte to high-byte; the UART
+ sends each low-bit to hight-bit; and the result is transmission bit
+ by bit from highest- to lowest-order term without requiring any bit
+ shuffling on our part.  Reception works similarly.
+
+ The feedback terms table consists of 256, 32-bit entries.  Notes:
+
+  1. The table can be generated at runtime if desired; code to do so
+     is shown later.  It might not be obvious, but the feedback
+     terms simply represent the results of eight shift/xor opera-
+     tions for all combinations of data and CRC register values.
+
+  2. The CRC accumulation logic is the same for all CRC polynomials,
+     be they sixteen or thirty-two bits wide.  You simply choose the
+     appropriate table.  Alternatively, because the table can be
+     generated at runtime, you can start by generating the table for
+     the polynomial in question and use exactly the same "updcrc",
+     if your application needn't simultaneously handle two CRC
+     polynomials.  (Note, however, that XMODEM is strange.)
+
+  3. For 16-bit CRCs, the table entries need be only 16 bits wide;
+     of course, 32-bit entries work OK if the high 16 bits are zero.
+
+  4. The values must be right-shifted by eight bits by the "updcrc"
+     logic; the shift must be unsigned (bring in zeroes).  On some
+     hardware you could probably optimize the shift in assembler by
+     using byte-swap instructions.
+********************************************************************/
+
+Modules/blake2module.c
+
+/*
+ * Written in 2013 by Dmitry Chestnykh <dmitry@codingrobots.com>
+ * Modified for CPython by Christian Heimes <christian@python.org>
+ * Updated to use HACL* by Jonathan Protzenko <jonathan@protzenko.fr>
+ *
+ * To the extent possible under law, the author have dedicated all
+ * copyright and related and neighboring rights to this software to
+ * the public domain worldwide. This software is distributed without
+ * any warranty. http://creativecommons.org/publicdomain/zero/1.0/
+ */
+
+Modules/getaddrinfo.c
+Modules/getnameinfo.c
+
+/*
+ * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the project nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+Modules/md5module.c
+Modules/sha1module.c
+
+/* See below for information about the original code this module was
+   based upon. Additional work performed by:
+
+   Andrew Kuchling (amk@amk.ca)
+   Greg Stein (gstein@lyra.org)
+   Trevor Perrin (trevp@trevp.net)
+
+   Copyright (C) 2005-2007   Gregory P. Smith (greg@krypto.org)
+   Licensed to PSF under a Contributor Agreement.
+
+*/
+
+Modules/selectmodule.c
+
+/* **************************************************************************
+ *                      kqueue interface for BSD
+ *
+ * Copyright (c) 2000 Doug White, 2006 James Knight, 2007 Christian Heimes
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+Modules/sha2module.c
+
+/* See below for information about the original code this module was
+   based upon. Additional work performed by:
+
+   Andrew Kuchling (amk@amk.ca)
+   Greg Stein (gstein@lyra.org)
+   Trevor Perrin (trevp@trevp.net)
+   Jonathan Protzenko (jonathan@protzenko.fr)
+
+   Copyright (C) 2005-2007   Gregory P. Smith (greg@krypto.org)
+   Licensed to PSF under a Contributor Agreement.
+
+*/
+
+Modules/sha3module.c
+
+/* SHA3 module
+ *
+ * This module provides an interface to the SHA3 algorithm
+ *
+ * See below for information about the original code this module was
+ * based upon. Additional work performed by:
+ *
+ *  Andrew Kuchling (amk@amk.ca)
+ *  Greg Stein (gstein@lyra.org)
+ *  Trevor Perrin (trevp@trevp.net)
+ *  Gregory P. Smith (greg@krypto.org)
+ *
+ * Copyright (C) 2012-2022  Christian Heimes (christian@python.org)
+ * Licensed to PSF under a Contributor Agreement.
+ *
+ */
+
+Modules/syslogmodule.c
+
+/***********************************************************
+Copyright 1994 by Lance Ellinghouse,
+Cathedral City, California Republic, United States of America.
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of Lance Ellinghouse
+not be used in advertising or publicity pertaining to distribution
+of the software without specific, written prior permission.
+
+LANCE ELLINGHOUSE DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL LANCE ELLINGHOUSE BE LIABLE FOR ANY SPECIAL,
+INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING
+FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+******************************************************************/
+
+Modules/unicodedata.c
+
+/* ------------------------------------------------------------------------
+
+   unicodedata -- Provides access to the Unicode database.
+
+   The current version number is reported in the unidata_version constant.
+
+   Written by Marc-Andre Lemburg (mal@lemburg.com).
+   Modified for Python 2.0 by Fredrik Lundh (fredrik@pythonware.com)
+   Modified by Martin v. Löwis (martin@v.loewis.de)
+
+   Copyright (c) Corporation for National Research Initiatives.
+
+   ------------------------------------------------------------------------ */
+
+Objects/mimalloc/alloc-aligned.c
+Objects/mimalloc/alloc-override.c
+Objects/mimalloc/alloc-posix.c
+Objects/mimalloc/options.c
+Objects/mimalloc/stats.c
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2018-2021, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/alloc.c
+Objects/mimalloc/init.c
+Objects/mimalloc/prim/osx/alloc-override-zone.c
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2018-2022, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/arena.c
+Objects/mimalloc/segment-map.c
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2019-2023, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/bitmap.c
+Objects/mimalloc/bitmap.h
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2019-2023 Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/heap.c
+
+/*----------------------------------------------------------------------------
+Copyright (c) 2018-2021, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/page-queue.c
+Objects/mimalloc/page.c
+
+/*----------------------------------------------------------------------------
+Copyright (c) 2018-2020, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/prim/windows/etw.h
+
+/**********************************************************************`
+//* This is an include file generated by Message Compiler.             *`
+//*                                                                    *`
+//* Copyright (c) Microsoft Corporation. All Rights Reserved.          *`
+//**********************************************************************`
+#pragma once
+
+//*****************************************************************************
+//
+// Notes on the ETW event code generated by MC:
+//
+// - Structures and arrays of structures are treated as an opaque binary blob.
+//   The caller is responsible for packing the data for the structure into a
+//   single region of memory, with no padding between values. The macro will
+//   have an extra parameter for the length of the blob.
+// - Arrays of nul-terminated strings must be packed by the caller into a
+//   single binary blob containing the correct number of strings, with a nul
+//   after each string. The size of the blob is specified in characters, and
+//   includes the final nul.
+// - Arrays of SID are treated as a single binary blob. The caller is
+//   responsible for packing the SID values into a single region of memory with
+//   no padding.
+// - The length attribute on the data element in the manifest is significant
+//   for values with intype win:UnicodeString, win:AnsiString, or win:Binary.
+//   The length attribute must be specified for win:Binary, and is optional for
+//   win:UnicodeString and win:AnsiString (if no length is given, the strings
+//   are assumed to be nul-terminated). For win:UnicodeString, the length is
+//   measured in characters, not bytes.
+// - For an array of win:UnicodeString, win:AnsiString, or win:Binary, the
+//   length attribute applies to every value in the array, so every value in
+//   the array must have the same length. The values in the array are provided
+//   to the macro via a single pointer -- the caller is responsible for packing
+//   all of the values into a single region of memory with no padding between
+//   values.
+// - Values of type win:CountedUnicodeString, win:CountedAnsiString, and
+//   win:CountedBinary can be generated and collected on Vista or later.
+//   However, they may not decode properly without the Windows 10 2018 Fall
+//   Update.
+// - Arrays of type win:CountedUnicodeString, win:CountedAnsiString, and
+//   win:CountedBinary must be packed by the caller into a single region of
+//   memory. The format for each item is a UINT16 byte-count followed by that
+//   many bytes of data. When providing the array to the generated macro, you
+//   must provide the total size of the packed array data, including the UINT16
+//   sizes for each item. In the case of win:CountedUnicodeString, the data
+//   size is specified in WCHAR (16-bit) units. In the case of
+//   win:CountedAnsiString and win:CountedBinary, the data size is specified in
+//   bytes.
+//
+//*****************************************************************************
+
+#include <wmistr.h>
+#include <evntrace.h>
+#include <evntprov.h>
+
+#ifndef ETW_INLINE
+  #ifdef _ETW_KM_
+    // In kernel mode, save stack space by never inlining templates.
+    #define ETW_INLINE DECLSPEC_NOINLINE __inline
+  #else
+    // In user mode, save code size by inlining templates as appropriate.
+    #define ETW_INLINE __inline
+  #endif
+#endif // ETW_INLINE
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+//
+// MCGEN_DISABLE_PROVIDER_CODE_GENERATION macro:
+// Define this macro to have the compiler skip the generated functions in this
+// header.
+//
+#ifndef MCGEN_DISABLE_PROVIDER_CODE_GENERATION
+
+//
+// MCGEN_USE_KERNEL_MODE_APIS macro:
+// Controls whether the generated code uses kernel-mode or user-mode APIs.
+// - Set to 0 to use Windows user-mode APIs such as EventRegister.
+// - Set to 1 to use Windows kernel-mode APIs such as EtwRegister.
+// Default is based on whether the _ETW_KM_ macro is defined (i.e. by wdm.h).
+// Note that the APIs can also be overridden directly, e.g. by setting the
+// MCGEN_EVENTWRITETRANSFER or MCGEN_EVENTREGISTER macros.
+//
+#ifndef MCGEN_USE_KERNEL_MODE_APIS
+  #ifdef _ETW_KM_
+    #define MCGEN_USE_KERNEL_MODE_APIS 1
+  #else
+    #define MCGEN_USE_KERNEL_MODE_APIS 0
+  #endif
+#endif // MCGEN_USE_KERNEL_MODE_APIS
+
+//
+// MCGEN_HAVE_EVENTSETINFORMATION macro:
+// Controls how McGenEventSetInformation uses the EventSetInformation API.
+// - Set to 0 to disable the use of EventSetInformation
+//   (McGenEventSetInformation will always return an error).
+// - Set to 1 to directly invoke MCGEN_EVENTSETINFORMATION.
+// - Set to 2 to to locate EventSetInformation at runtime via GetProcAddress
+//   (user-mode) or MmGetSystemRoutineAddress (kernel-mode).
+// Default is determined as follows:
+// - If MCGEN_EVENTSETINFORMATION has been customized, set to 1
+//   (i.e. use MCGEN_EVENTSETINFORMATION).
+// - Else if the target OS version has EventSetInformation, set to 1
+//   (i.e. use MCGEN_EVENTSETINFORMATION).
+// - Else set to 2 (i.e. try to dynamically locate EventSetInformation).
+// Note that an McGenEventSetInformation function will only be generated if one
+// or more provider in a manifest has provider traits.
+//
+#ifndef MCGEN_HAVE_EVENTSETINFORMATION
+  #ifdef MCGEN_EVENTSETINFORMATION             // if MCGEN_EVENTSETINFORMATION has been customized,
+    #define MCGEN_HAVE_EVENTSETINFORMATION   1 //   directly invoke MCGEN_EVENTSETINFORMATION(...).
+  #elif MCGEN_USE_KERNEL_MODE_APIS             // else if using kernel-mode APIs,
+    #if NTDDI_VERSION >= 0x06040000            //   if target OS is Windows 10 or later,
+      #define MCGEN_HAVE_EVENTSETINFORMATION 1 //     directly invoke MCGEN_EVENTSETINFORMATION(...).
+    #else                                      //   else
+      #define MCGEN_HAVE_EVENTSETINFORMATION 2 //     find "EtwSetInformation" via MmGetSystemRoutineAddress.
+    #endif                                     // else (using user-mode APIs)
+  #else                                        //   if target OS and SDK is Windows 8 or later,
+    #if WINVER >= 0x0602 && defined(EVENT_FILTER_TYPE_SCHEMATIZED)
+      #define MCGEN_HAVE_EVENTSETINFORMATION 1 //     directly invoke MCGEN_EVENTSETINFORMATION(...).
+    #else                                      //   else
+      #define MCGEN_HAVE_EVENTSETINFORMATION 2 //     find "EventSetInformation" via GetModuleHandleExW/GetProcAddress.
+    #endif
+  #endif
+#endif // MCGEN_HAVE_EVENTSETINFORMATION
+
+//
+// MCGEN Override Macros
+//
+// The following override macros may be defined before including this header
+// to control the APIs used by this header:
+//
+// - MCGEN_EVENTREGISTER
+// - MCGEN_EVENTUNREGISTER
+// - MCGEN_EVENTSETINFORMATION
+// - MCGEN_EVENTWRITETRANSFER
+//
+// If the macro is undefined, the MC implementation will default to the
+// corresponding ETW APIs. For example, if the MCGEN_EVENTREGISTER macro is
+// undefined, the EventRegister[MyProviderName] macro will use EventRegister
+// in user mode and will use EtwRegister in kernel mode.
+//
+// To prevent issues from conflicting definitions of these macros, the value
+// of the override macro will be used as a suffix in certain internal function
+// names. Because of this, the override macros must follow certain rules:
+//
+// - The macro must be defined before any MC-generated header is included and
+//   must not be undefined or redefined after any MC-generated header is
+//   included. Different translation units (i.e. different .c or .cpp files)
+//   may set the macros to different values, but within a translation unit
+//   (within a single .c or .cpp file), the macro must be set once and not
+//   changed.
+// - The override must be an object-like macro, not a function-like macro
+//   (i.e. the override macro must not have a parameter list).
+// - The override macro's value must be a simple identifier, i.e. must be
+//   something that starts with a letter or '_' and contains only letters,
+//   numbers, and '_' characters.
+// - If the override macro's value is the name of a second object-like macro,
+//   the second object-like macro must follow the same rules. (The override
+//   macro's value can also be the name of a function-like macro, in which
+//   case the function-like macro does not need to follow the same rules.)
+//
+// For example, the following will cause compile errors:
+//
+//   #define MCGEN_EVENTWRITETRANSFER MyNamespace::MyClass::MyFunction // Value has non-identifier characters (colon).
+//   #define MCGEN_EVENTWRITETRANSFER GetEventWriteFunctionPointer(7)  // Value has non-identifier characters (parentheses).
+//   #define MCGEN_EVENTWRITETRANSFER(h,e,a,r,c,d) EventWrite(h,e,c,d) // Override is defined as a function-like macro.
+//   #define MY_OBJECT_LIKE_MACRO     MyNamespace::MyClass::MyEventWriteFunction
+//   #define MCGEN_EVENTWRITETRANSFER MY_OBJECT_LIKE_MACRO // Evaluates to something with non-identifier characters (colon).
+//
+// The following would be ok:
+//
+//   #define MCGEN_EVENTWRITETRANSFER  MyEventWriteFunction1  // OK, suffix will be "MyEventWriteFunction1".
+//   #define MY_OBJECT_LIKE_MACRO      MyEventWriteFunction2
+//   #define MCGEN_EVENTWRITETRANSFER  MY_OBJECT_LIKE_MACRO   // OK, suffix will be "MyEventWriteFunction2".
+//   #define MY_FUNCTION_LIKE_MACRO(h,e,a,r,c,d) MyNamespace::MyClass::MyEventWriteFunction3(h,e,c,d)
+//   #define MCGEN_EVENTWRITETRANSFER  MY_FUNCTION_LIKE_MACRO // OK, suffix will be "MY_FUNCTION_LIKE_MACRO".
+//
+#ifndef MCGEN_EVENTREGISTER
+  #if MCGEN_USE_KERNEL_MODE_APIS
+    #define MCGEN_EVENTREGISTER        EtwRegister
+  #else
+    #define MCGEN_EVENTREGISTER        EventRegister
+  #endif
+#endif // MCGEN_EVENTREGISTER
+#ifndef MCGEN_EVENTUNREGISTER
+  #if MCGEN_USE_KERNEL_MODE_APIS
+    #define MCGEN_EVENTUNREGISTER      EtwUnregister
+  #else
+    #define MCGEN_EVENTUNREGISTER      EventUnregister
+  #endif
+#endif // MCGEN_EVENTUNREGISTER
+#ifndef MCGEN_EVENTSETINFORMATION
+  #if MCGEN_USE_KERNEL_MODE_APIS
+    #define MCGEN_EVENTSETINFORMATION  EtwSetInformation
+  #else
+    #define MCGEN_EVENTSETINFORMATION  EventSetInformation
+  #endif
+#endif // MCGEN_EVENTSETINFORMATION
+#ifndef MCGEN_EVENTWRITETRANSFER
+  #if MCGEN_USE_KERNEL_MODE_APIS
+    #define MCGEN_EVENTWRITETRANSFER   EtwWriteTransfer
+  #else
+    #define MCGEN_EVENTWRITETRANSFER   EventWriteTransfer
+  #endif
+#endif // MCGEN_EVENTWRITETRANSFER
+
+//
+// MCGEN_EVENT_ENABLED macro:
+// Override to control how the EventWrite[EventName] macros determine whether
+// an event is enabled. The default behavior is for EventWrite[EventName] to
+// use the EventEnabled[EventName] macros.
+//
+#ifndef MCGEN_EVENT_ENABLED
+#define MCGEN_EVENT_ENABLED(EventName) EventEnabled##EventName()
+#endif
+
+//
+// MCGEN_EVENT_ENABLED_FORCONTEXT macro:
+// Override to control how the EventWrite[EventName]_ForContext macros
+// determine whether an event is enabled. The default behavior is for
+// EventWrite[EventName]_ForContext to use the
+// EventEnabled[EventName]_ForContext macros.
+//
+#ifndef MCGEN_EVENT_ENABLED_FORCONTEXT
+#define MCGEN_EVENT_ENABLED_FORCONTEXT(pContext, EventName) EventEnabled##EventName##_ForContext(pContext)
+#endif
+
+//
+// MCGEN_ENABLE_CHECK macro:
+// Determines whether the specified event would be considered as enabled
+// based on the state of the specified context. Slightly faster than calling
+// McGenEventEnabled directly.
+//
+#ifndef MCGEN_ENABLE_CHECK
+#define MCGEN_ENABLE_CHECK(Context, Descriptor) (Context.IsEnabled && McGenEventEnabled(&Context, &Descriptor))
+#endif
+
+#if !defined(MCGEN_TRACE_CONTEXT_DEF)
+#define MCGEN_TRACE_CONTEXT_DEF
+// This structure is for use by MC-generated code and should not be used directly.
+typedef struct _MCGEN_TRACE_CONTEXT
+{
+    TRACEHANDLE            RegistrationHandle;
+    TRACEHANDLE            Logger;      // Used as pointer to provider traits.
+    ULONGLONG              MatchAnyKeyword;
+    ULONGLONG              MatchAllKeyword;
+    ULONG                  Flags;
+    ULONG                  IsEnabled;
+    UCHAR                  Level;
+    UCHAR                  Reserve;
+    USHORT                 EnableBitsCount;
+    PULONG                 EnableBitMask;
+    const ULONGLONG*       EnableKeyWords;
+    const UCHAR*           EnableLevel;
+} MCGEN_TRACE_CONTEXT, *PMCGEN_TRACE_CONTEXT;
+#endif // MCGEN_TRACE_CONTEXT_DEF
+
+#if !defined(MCGEN_LEVEL_KEYWORD_ENABLED_DEF)
+#define MCGEN_LEVEL_KEYWORD_ENABLED_DEF
+//
+// Determines whether an event with a given Level and Keyword would be
+// considered as enabled based on the state of the specified context.
+// Note that you may want to use MCGEN_ENABLE_CHECK instead of calling this
+// function directly.
+//
+FORCEINLINE
+BOOLEAN
+McGenLevelKeywordEnabled(
+    _In_ PMCGEN_TRACE_CONTEXT EnableInfo,
+    _In_ UCHAR Level,
+    _In_ ULONGLONG Keyword
+    )
+{
+    //
+    // Check if the event Level is lower than the level at which
+    // the channel is enabled.
+    // If the event Level is 0 or the channel is enabled at level 0,
+    // all levels are enabled.
+    //
+
+    if ((Level <= EnableInfo->Level) || // This also covers the case of Level == 0.
+        (EnableInfo->Level == 0)) {
+
+        //
+        // Check if Keyword is enabled
+        //
+
+        if ((Keyword == (ULONGLONG)0) ||
+            ((Keyword & EnableInfo->MatchAnyKeyword) &&
+             ((Keyword & EnableInfo->MatchAllKeyword) == EnableInfo->MatchAllKeyword))) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+#endif // MCGEN_LEVEL_KEYWORD_ENABLED_DEF
+
+#if !defined(MCGEN_EVENT_ENABLED_DEF)
+#define MCGEN_EVENT_ENABLED_DEF
+//
+// Determines whether the specified event would be considered as enabled based
+// on the state of the specified context. Note that you may want to use
+// MCGEN_ENABLE_CHECK instead of calling this function directly.
+//
+FORCEINLINE
+BOOLEAN
+McGenEventEnabled(
+    _In_ PMCGEN_TRACE_CONTEXT EnableInfo,
+    _In_ PCEVENT_DESCRIPTOR EventDescriptor
+    )
+{
+    return McGenLevelKeywordEnabled(EnableInfo, EventDescriptor->Level, EventDescriptor->Keyword);
+}
+#endif // MCGEN_EVENT_ENABLED_DEF
+
+#if !defined(MCGEN_CONTROL_CALLBACK)
+#define MCGEN_CONTROL_CALLBACK
+
+// This function is for use by MC-generated code and should not be used directly.
+DECLSPEC_NOINLINE __inline
+VOID
+__stdcall
+McGenControlCallbackV2(
+    _In_ LPCGUID SourceId,
+    _In_ ULONG ControlCode,
+    _In_ UCHAR Level,
+    _In_ ULONGLONG MatchAnyKeyword,
+    _In_ ULONGLONG MatchAllKeyword,
+    _In_opt_ PEVENT_FILTER_DESCRIPTOR FilterData,
+    _Inout_opt_ PVOID CallbackContext
+    )
+/*++
+
+Routine Description:
+
+    This is the notification callback for Windows Vista and later.
+
+Arguments:
+
+    SourceId - The GUID that identifies the session that enabled the provider.
+
+    ControlCode - The parameter indicates whether the provider
+                  is being enabled or disabled.
+
+    Level - The level at which the event is enabled.
+
+    MatchAnyKeyword - The bitmask of keywords that the provider uses to
+                      determine the category of events that it writes.
+
+    MatchAllKeyword - This bitmask additionally restricts the category
+                      of events that the provider writes.
+
+    FilterData - The provider-defined data.
+
+    CallbackContext - The context of the callback that is defined when the provider
+                      called EtwRegister to register itself.
+
+Remarks:
+
+    ETW calls this function to notify provider of enable/disable
+
+--*/
+
+Objects/mimalloc/prim/windows/etw.h
+
+//**********************************************************************`
+//* This is an include file generated by Message Compiler.             *`
+//*                                                                    *`
+//* Copyright (c) Microsoft Corporation. All Rights Reserved.          *`
+//**********************************************************************`
+
+
+Objects/mimalloc/random.c
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2019-2021, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/mimalloc/segment.c
+Objects/mimalloc/static.c
+
+/* ----------------------------------------------------------------------------
+Copyright (c) 2018-2020, Microsoft Research, Daan Leijen
+This is free software; you can redistribute it and/or modify it under the
+terms of the MIT license. A copy of the license can be found in the file
+"LICENSE" at the root of this distribution.
+-----------------------------------------------------------------------------*/
+
+Objects/sliceobject.c
+
+/*
+Written by Jim Hugunin and Chris Chase.
+
+This includes both the singular ellipsis object and slice objects.
+
+Guido, feel free to do whatever you want in the way of copyrights
+for this file.
+*/
+
+Objects/unicodectype.c
+
+/*
+   Unicode character type helpers.
+
+   Written by Marc-Andre Lemburg (mal@lemburg.com).
+   Modified for Python 2.0 by Fredrik Lundh (fredrik@pythonware.com)
+
+   Copyright (c) Corporation for National Research Initiatives.
+
+*/
+
+Objects/unicodeobject.c
+
+/*
+
+Unicode implementation based on original code by Fredrik Lundh,
+modified by Marc-Andre Lemburg <mal@lemburg.com>.
+
+Major speed upgrades to the method implementations at the Reykjavik
+NeedForSpeed sprint, by Fredrik Lundh and Andrew Dalke.
+
+Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+The original string type implementation is:
+
+  Copyright (c) 1999 by Secret Labs AB
+  Copyright (c) 1999 by Fredrik Lundh
+
+By obtaining, using, and/or copying this software and/or its
+associated documentation, you agree that you have read, understood,
+and will comply with the following terms and conditions:
+
+Permission to use, copy, modify, and distribute this software and its
+associated documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appears in all
+copies, and that both that copyright notice and this permission notice
+appear in supporting documentation, and that the name of Secret Labs
+AB or the author not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS.  IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+--------------------------------------------------------------------
+
+*/
+
+Python/codecs.c
+
+/* ------------------------------------------------------------------------
+
+   Python Codec Registry and support functions
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+   ------------------------------------------------------------------------ */
+
+Python/dtoa.c
+
+/****************************************************************
+ *
+ * The author of this software is David M. Gay.
+ *
+ * Copyright (c) 1991, 2000, 2001 by Lucent Technologies.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose without fee is hereby granted, provided that this entire notice
+ * is included in all copies of any software which is or includes a copy
+ * or modification of this software and in all copies of the supporting
+ * documentation for such software.
+ *
+ * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+ * WARRANTY.  IN PARTICULAR, NEITHER THE AUTHOR NOR LUCENT MAKES ANY
+ * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
+ * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+ *
+ ***************************************************************/
+
+Python/dup2.c
+
+/*
+ * Public domain dup2() lookalike
+ * by Curtis Jackson @ AT&T Technologies, Burlington, NC
+ * electronic address:  burl!rcj
+ *
+ * dup2 performs the following functions:
+ *
+ * Check to make sure that fd1 is a valid open file descriptor.
+ * Check to see if fd2 is already open; if so, close it.
+ * Duplicate fd1 onto fd2; checking to make sure fd2 is a valid fd.
+ * Return fd2 if all went well; return BADEXIT otherwise.
+ */
+
+Python/dynamic_annotations.c
+
+/* Copyright (c) 2008-2009, Google Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ---
+ * Author: Kostya Serebryany
+ */
+
+Python/getcopyright.c
+
+/* Return the copyright string.  This is updated manually. */
+
+Python/getopt.c
+
+/*---------------------------------------------------------------------------*
+ * <RCS keywords>
+ *
+ * C++ Library
+ *
+ * Copyright 1992-1994, David Gottner
+ *
+ *                    All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright notice, this permission notice and
+ * the following disclaimer notice appear unmodified in all copies.
+ *
+ * I DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL I
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA, OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *---------------------------------------------------------------------------*/
+
+Python/hashtable.c
+
+/* The implementation of the hash table (_Py_hashtable_t) is based on the
+   cfuhash project:
+   http://sourceforge.net/projects/libcfu/
+
+   Copyright of cfuhash:
+   ----------------------------------
+   Creation date: 2005-06-24 21:22:40
+   Authors: Don
+   Change log:
+
+   Copyright (c) 2005 Don Owens
+   All rights reserved.
+
+   This code is released under the BSD license:
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+     * Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+
+     * Redistributions in binary form must reproduce the above
+       copyright notice, this list of conditions and the following
+       disclaimer in the documentation and/or other materials provided
+       with the distribution.
+
+     * Neither the name of the author nor the names of its
+       contributors may be used to endorse or promote products derived
+       from this software without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+   COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+   OF THE POSSIBILITY OF SUCH DAMAGE.
+   ----------------------------------
+*/
+
+Python/pyhash.c
+
+/* **************************************************************************
+ <MIT License>
+ Copyright (c) 2013  Marek Majkowski <marek@popcount.org>
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ </MIT License>
+
+ Original location:
+    https://github.com/majek/csiphash/
+
+ Solution inspired by code from:
+    Samuel Neves (supercop/crypto_auth/siphash24/little)
+    djb (supercop/crypto_auth/siphash24/little2)
+    Jean-Philippe Aumasson (https://131002.net/siphash/siphash24.c)
+
+ Modified for Python by Christian Heimes:
+    - C89 / MSVC compatibility
+    - _rotl64() on Windows
+    - letoh64() fallback
+*/
+
+Python/qsbr.c
+
+/*
+ * Implementation of safe memory reclamation scheme using
+ * quiescent states.
+ *
+ * This is derived from the "GUS" safe memory reclamation technique
+ * in FreeBSD written by Jeffrey Roberson. It is heavily modified. Any bugs
+ * in this code are likely due to the modifications.
+ *
+ * The original copyright is preserved below.
+ *
+ * Copyright (c) 2019,2020 Jeffrey Roberson <jeff@FreeBSD.org>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice unmodified, this list of conditions, and the following
+ *    disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
