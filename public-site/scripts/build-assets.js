@@ -22,6 +22,7 @@ if (locationData.stale)
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist/vendor/pyodide", { recursive: true });
 await cp("ui", "dist", { recursive: true });
+await cp("../LICENSE", "dist/LICENSE.txt");
 await cp("src", "dist/src", { recursive: true });
 await cp("generated", "dist/generated", { recursive: true });
 await mkdir("dist/fonts", { recursive: true });

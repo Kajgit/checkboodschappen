@@ -1,21 +1,65 @@
-MIT License
+Checkboodschappen Source-Available License 1.0
+Effective date: 24 September 2026
+Copyright (c) 2026 Checkboodschappen contributors
 
-Copyright (c) 2026 BoodschappenWijzer contributors
+1. Scope
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This license applies to original Checkboodschappen code and assets supplied with
+this license, to the extent the relevant copyright holders can grant these rights.
+Third-party components and data remain governed by their own licenses and terms.
+This is a source-available license, not an OSI-approved open-source license.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Permitted use
+
+Subject to these terms, you may read, run, copy and modify the software for your
+personal use, internal use within your organization, research, evaluation and
+contributions to Checkboodschappen. You may publish source-code forks for review
+and collaboration if they retain this license and the applicable notices and do
+not provide an end-user product or hosted service. A fork must be clearly marked
+as an unofficial fork of Checkboodschappen.
+
+3. Reserved commercial and distribution rights
+
+Without separate written permission from the relevant copyright holders, you may
+not, using software covered by this license or a derivative of it:
+
+(a) offer, sell, sublicense or distribute an end-user application, product or
+service to third parties, whether paid or free;
+(b) operate a public hosted, managed or software-as-a-service offering that gives
+third parties access to a substantial part of the software's functionality; or
+(c) white-label or rebrand the software for third parties, including substituting
+your own or a customer's branding to present it as that party's product.
+
+Private self-hosting for yourself or your organization's internal users is
+permitted. Paid work contributing changes back to Checkboodschappen is permitted.
+Commercial and white-label permissions may be requested at
+info@thenorthsolution.com. A request does not itself grant permission.
+
+4. Notices and branding
+
+Retain this license and all applicable copyright, attribution and third-party
+notices in permitted copies. This license grants no trademark rights and no right
+to imply endorsement. Do not remove notices to conceal the software's origin.
+
+5. Previously released material
+
+Releases through commit 1d59f6db3ddcc068373f8a48296c5ff4805f7fc5 were published
+under the MIT License. This license does not revoke, replace or restrict rights
+already granted for that material. It applies to subsequent copyrightable
+contributions supplied under these terms. Material independently available under
+another license remains available under that license. This notice does not
+relicense third-party code or contributions without the necessary rights.
+
+6. Termination
+
+Rights granted by this license terminate if you violate its conditions. Rights
+under separate licenses are unaffected. No rights beyond those expressly granted
+here are granted by implication.
+
+7. Disclaimer
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE COPYRIGHT HOLDERS
+ARE NOT LIABLE FOR CLAIMS, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE
+OR ITS USE, WHETHER IN CONTRACT, TORT OR OTHERWISE.

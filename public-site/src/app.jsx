@@ -895,7 +895,8 @@ function App() {
           </div>
           <div>
             <a href="/privacy.html">Privacy</a>
-            <a href="/THIRD-PARTY-NOTICES.txt">Licenties</a>
+            <a href="/LICENSE.txt">Licentie</a>
+            <a href="/THIRD-PARTY-NOTICES.txt">Bronlicenties</a>
             <a href="https://www.openstreetmap.org/copyright">
               © OpenStreetMap (ODbL)
             </a>
