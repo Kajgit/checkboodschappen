@@ -586,5 +586,9 @@
   {
     "source": "scripts/build_macos.sh",
     "target": "scripts/build_macos.sh"
+  },
+  {
+    "source": "public-site/src/product-picker.jsx",
+    "target": "public-site/src/product-picker.jsx"
   }
 ]

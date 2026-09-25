@@ -218,6 +218,19 @@ FAMILY_LABEL_WORDS = {
 }
 
 
+FAMILY_LABEL_WORDS.update({
+    'kipfilet_beleg': 'gebraden gerookt gerookte gegrild gegrilde flinterdun gesneden naturel vleeswaren beleg',
+    'chorizo': 'gesneden plak plakken plakjes mild pittig vleeswaren',
+    'smeerworst': 'lever room tuinkruiden fijn fijne grof grove smeerbaar',
+    'vlokken': 'chocolade melk puur pure witte wit extra hagel',
+    'hagelslag': 'chocolade melk puur pure witte wit extra',
+    'chocopasta': 'chocolade melk puur pure witte wit hazelnoot hazelnoten duo',
+    'fanta': 'orange sinaasappel cassis lemon citroen exotic strawberry kiwi zero sugar suiker',
+})
+FAMILY_BRANDS.update({'smeerworst': ('kips', 'kroon'), 'vlokken': ('de ruijter', 'venz'),
+                     'hagelslag': ('de ruijter', 'venz'), 'chocopasta': ('nutella', 'duo penotti', 'penotti')})
+
+
 def unexplained_identity(name: str, family: str, aliases: tuple[str, ...], candidate: dict | None = None, query: str = "") -> list[str]:
     import re
     from .product_text import stem, words

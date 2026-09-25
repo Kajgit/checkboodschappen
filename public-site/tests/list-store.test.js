@@ -30,3 +30,11 @@ test('rejects oversized inputs and unavailable browser storage clearly',async()=
   assert.throws(()=>parseBackup(' '.repeat(100001)));
   await assert.rejects(new ListStore({indexedDB:null}).load(),/ondersteunt geen/);
 });
+
+test('explicit product selection survives backup without storing a price',()=>{
+ const value={version:1,postcode:'',items:[{id:'one',query:'smeerworst',quantity:2,unit:'verpakking',selectedProduct:{productId:'cjb:A:1',retailer:'A',name:'Kips Smeerworst',priceCents:1}}]};
+ const result=parseBackup(serializeBackup(value));
+ assert.deepEqual(result.items[0].selectedProduct,{productId:'cjb:A:1',retailer:'A',name:'Kips Smeerworst'});
+ assert.equal(result.items[0].quantity,2);
+ assert.throws(()=>validateList({...value,items:[{...value.items[0],selectedProduct:{}}]}));
+});

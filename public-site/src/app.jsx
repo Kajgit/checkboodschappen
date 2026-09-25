@@ -15,6 +15,7 @@ import {
   LoaderCircle,
   Check,
 } from "lucide-react";
+import { ProductPicker } from "./product-picker.jsx";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -63,7 +64,7 @@ function Credit({ source }) {
     </a>
   );
 }
-function Basket({ basket, result, index, onStatus }) {
+function Basket({ basket, result, index, onStatus, onResolve }) {
   const [exporting, setExporting] = useState("");
   async function exportBon(format) {
     setExporting(format);
@@ -141,6 +142,7 @@ function Basket({ basket, result, index, onStatus }) {
                 {line.product.package || "inhoud onbekend"} · gevraagd:{" "}
                 {line.item.quantity} {line.item.unit}
               </small>
+              {line.item.selectedProduct && <small>Zelf gekozen product</small>}
               {line.decision.overage > 0 && (
                 <small>
                   Extra: {Number(line.decision.overage.toFixed(3))}{" "}
@@ -179,9 +181,9 @@ function Basket({ basket, result, index, onStatus }) {
             <div className="missing-box">
               <strong>{basket.missing.length} niet gevonden</strong>
               {basket.missing.map((m) => (
-                <p key={m.item.id}>
-                  {m.item.query} — {reasons[m.reason] || m.reason}
-                </p>
+                <button type="button" className="missing-product" key={m.item.id} onClick={() => onResolve(m.item.id)}>
+                  <strong>{m.item.query}</strong><span>{reasons[m.reason] || m.reason}</span><span className="resolve-label">Product kiezen →</span>
+                </button>
               ))}
             </div>
           )}
@@ -219,6 +221,7 @@ function App() {
     [text, setText] = useState(""),
     [people, setPeople] = useState(""),
     [review, setReview] = useState(null),
+    [pickerId, setPickerId] = useState(null),
     [postcode, setPostcode] = useState(""),
     [radius, setRadius] = useState(10),
     [maxStores, setMaxStores] = useState(2),
@@ -254,6 +257,21 @@ function App() {
       run.current?.matcher.close();
     };
   }, []);
+  function openPicker(id) {
+    setPickerId(id);
+    requestAnimationFrame(() => {
+      const row = document.getElementById(`item-${id}`);
+      row?.scrollIntoView({behavior: "smooth", block: "center"});
+    });
+  }
+  async function chooseProduct(id, product) {
+    const ok = await save(next => {const item = next.items.find(i => i.id === id);
+      if(product)item.selectedProduct={productId:product.productId,retailer:product.retailer,name:product.name};
+      else delete item.selectedProduct;
+      return next;
+    });
+    if(ok){setPickerId(null);setMessage("Productkeuze opgeslagen. Klik op Vergelijk boodschappen.");}
+  }
   function invalidate() {
     setResult(null);
     setMessage("Lijst gewijzigd. Vergelijk opnieuw.");
@@ -326,6 +344,7 @@ function App() {
   }
   function edit(id, key, value) {
     save((next) => {
+      if(key === "query") delete next.items.find(i => i.id === id).selectedProduct;
       next.items.find((i) => i.id === id)[key] =
         key === "quantity" ? Number(value) : value;
       return next;
@@ -621,7 +640,8 @@ function App() {
               {list.items.length ? (
                 list.items.map((item, i) => (
                   <div
-                    className="item-row"
+                    id={`item-${item.id}`}
+                    className={`item-row ${pickerId === item.id ? "item-highlight" : ""}`}
                     key={`${item.id}:${item.query}:${item.quantity}:${item.unit}`}
                   >
                     <Input
@@ -674,6 +694,8 @@ function App() {
                     >
                       <Trash2 size={14} />
                     </Button>
+                    <button type="button" className="choose-product" disabled={busy} aria-expanded={pickerId === item.id} onClick={() => pickerId === item.id ? setPickerId(null) : openPicker(item.id)}>{item.selectedProduct ? `${item.selectedProduct.name} · ${item.selectedProduct.retailer}` : "Product kiezen"}</button>
+                    {pickerId === item.id && <ProductPicker item={item} onSelect={p => chooseProduct(item.id,p)} onClose={() => setPickerId(null)} />}
                   </div>
                 ))
               ) : (
@@ -852,10 +874,7 @@ function App() {
                   </p>
                 )}
                 {!result.baskets.length && (
-                  <p className="panel p-4">
-                    Geen passende producten gevonden. Controleer je lijst en
-                    bronmeldingen.
-                  </p>
+                  <div className="missing-box"><strong>{list.items.length} niet gevonden</strong><p>Controleer je productkeuze en de bronmeldingen.</p>{list.items.map(item => <button type="button" className="missing-product" key={item.id} onClick={() => openPicker(item.id)}>{item.query}<span className="resolve-label">Product kiezen →</span></button>)}</div>
                 )}
                 {result.baskets.map((b, i) => (
                   <Basket
@@ -864,6 +883,7 @@ function App() {
                     result={result}
                     index={i}
                     onStatus={setMessage}
+                    onResolve={openPicker}
                   />
                 ))}
                 <details className="method-note">

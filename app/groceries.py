@@ -374,8 +374,21 @@ for _family, (_positive, _negative) in list(FAMILY_RULES.items()):
     FAMILY_RULES[_family] = (_positive, tuple(term for term in _negative if term.strip() not in {"bio", "biologisch"}))
 
 
+FAMILY_RULES.update({
+    "melk": (("melk",), ("kokos", "haver", "amandel", "soja", "chocolade", "koffiemelk", "melkpoeder", "rijst", "gecondenseerd")),
+    "kipfilet_beleg": (("vleeswaren kipfilet", "kipfilet vleeswaren", "gebraden kipfilet", "gerookte kipfilet", "kipfilet beleg"), ("salade", "maaltijd")),
+    "chorizo": (("chorizo", "vleeswaren chorizo"), ("pizza", "maaltijd", "salade", "soep", "chips")),
+    "smeerworst": (("smeerworst", "smeerleverworst"), ("vega", "vegetarisch", "plantaardig")),
+    "vlokken": (("chocoladevlokken", "chocolade vlokken", "vlokken"), ("haver", "spelt", "gist", "zeep", "chili", "rijst")),
+    "hagelslag": (("hagelslag",), ("gekleurde", "vruchten", "anijs")),
+    "chocopasta": (("chocopasta", "chocoladepasta", "chocolade pasta", "hazelnootpasta"), ("koek", "croissant")),
+    "fanta": (("fanta",), ("snoep", "ijs", "siroop")),
+})
+
 def infer_profile(text: str) -> dict:
     lowered = clean_text(text).lower()
+    if ("kipfilet" in lowered and any(t in lowered for t in ("vleeswaren", "beleg", "gebraden", "gerookte"))) or ("melk" in lowered and "houdbaar" in lowered):
+        return {}
     if contains_keyword(lowered, "peen en uien"):
         return {}
     for key, profile in BASIC_PROFILES.items():
@@ -517,6 +530,10 @@ def candidate_decision(item: dict, name: str, candidate: dict | None = None,
         raw_evidence = any(exact_phrase(name, term) for term in ("peen", "wortel", "ui", "hutspotgroenten"))
         if not raw_evidence and not any(exact_phrase(category, term) for term in ("groente", "groenten")):
             return {"status": "unreviewed", "reason": "Hutspot kan rauwe groente of een bereide maaltijd zijn; bron bevestigt de vorm niet"}
+    if intent["family"] == "kipfilet_beleg":
+        category = str((candidate or {}).get("unified_category") or "")
+        if not any(exact_phrase(name + " " + category, term) for term in ("gebraden", "gerookte", "gegrild", "vleeswaren", "beleg")):
+            return {"status": "unreviewed", "reason": "Controleer of dit kipfilet voor op brood is"}
     if intent["family"] == "kipfilet" and candidate:
         contents = parse_amount(candidate.get("s") or candidate.get("quantity")) or parse_amount(name)
         category = str(candidate.get("unified_category") or "") + " " + str(candidate.get("retailer_category") or "")

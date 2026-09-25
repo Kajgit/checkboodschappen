@@ -770,3 +770,47 @@ def test_miso_paste_spacing_does_not_admit_soup_or_flavoured_food():
             assert candidate_decision({'query': query}, name)['status'] == 'accepted'
         for name in ('Miso pasta soep', 'Miso boter', 'Miso ramen', 'Miso pasta marinade'):
             assert candidate_decision({'query': query}, name)['status'] == 'rejected'
+
+
+def test_generic_breakfast_and_deli_products():
+    from app.groceries import candidate_decision
+    pairs = [
+        ('houdbare melk', 'AH Houdbare halfvolle melk'),
+        ('vleeswaren kipfilet', 'AH Gebraden kipfilet'),
+        ('vleeswaren chorizo', 'AH Chorizo'),
+        ('smeerworst', 'Kips Smeerworst'),
+        ('vlokken', 'De Ruijter Chocoladevlokken melk'),
+        ('hagelslag', 'Venz Hagelslag melk'),
+        ('chocopasta', 'AH Chocoladepasta melk'),
+        ('fanta', 'Fanta Orange'),
+    ]
+    for query, name in pairs:
+        assert candidate_decision({'query': query}, name)['status'] == 'accepted', (query, name)
+    for query, name in [('houdbare melk', 'AH Verse halfvolle melk'),
+                        ('vleeswaren kipfilet', 'AH Kipfilet'),
+                        ('kipfilet', 'AH Gebraden kipfilet'),
+                        ('vlokken', 'AH Havervlokken'),
+                        ('smeerworst', 'AH Leverworst'),
+                        ('hagelslag puur', 'Venz Hagelslag melk'),
+                        ('ongezoete kokosmelk', 'AH Kokosmelk'),
+                        ('fanta zero', 'Fanta Orange')]:
+        assert candidate_decision({'query': query}, name)['status'] != 'accepted', (query, name)
+
+
+def test_browser_explicit_selection_keeps_quantity_checks_and_excludes_other_products():
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location('app.browser_bridge', Path(__file__).parents[1] / 'public-site/python/bridge.py')
+    bridge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bridge)
+    product = {'productId': 'chosen', 'retailer': 'A', 'name': 'Kips Vega smeerworst', 'package': '125 g'}
+    item = {'query': 'smeerworst', 'quantity': 300, 'unit': 'g', 'selectedProduct': {k: product[k] for k in ('productId', 'retailer', 'name')}}
+    chosen, other, unknown = bridge.evaluate([
+        {'item': item, 'product': product},
+        {'item': item, 'product': {**product, 'productId': 'other'}},
+        {'item': item, 'product': {**product, 'package': ''}},
+    ])
+    assert chosen['status'] == 'accepted'
+    assert chosen['packages'] == 3
+    assert other['status'] == 'rejected'
+    assert unknown['status'] == 'quantity_unknown'

@@ -12,7 +12,13 @@ export function validateList(value) {
         /[\x00-\x1f]/.test(item.query) || !Number.isFinite(item.quantity) || item.quantity <= 0 ||
         item.quantity > 100000 || !units.has(item.unit)) throw new Error('Ongeldige productregel.');
     ids.add(item.id);
-    return {id:item.id,query:item.query.trim(),quantity:item.quantity,unit:item.unit};
+    let selectedProduct;
+    if(item.selectedProduct!==undefined){
+      const p=item.selectedProduct;
+      if(!p||['productId','retailer','name'].some(k=>typeof p[k]!=='string'||!p[k].trim()||p[k].length>2000||/[\x00-\x1f]/.test(p[k])))throw new Error('Ongeldige productkeuze.');
+      selectedProduct={productId:p.productId,retailer:p.retailer,name:p.name};
+    }
+    return {id:item.id,query:item.query.trim(),quantity:item.quantity,unit:item.unit,...(selectedProduct?{selectedProduct}:{})};
   });
   const postcode = typeof value.postcode === 'string' ? value.postcode.replace(/\s/g,'').toUpperCase() : '';
   if (postcode && !/^[1-9]\d{3}[A-Z]{2}$/.test(postcode)) throw new Error('Ongeldige postcode.');

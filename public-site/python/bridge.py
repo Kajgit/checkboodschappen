@@ -28,6 +28,10 @@ def evaluate(data):
             decisions.append({**decision, 'alternative': query})
         decision = next((d for d in decisions if d['status'] == 'accepted'),
                         next((d for d in decisions if d['status'] == 'unreviewed'), decisions[0]))
+        selected = item.get('selectedProduct')
+        if selected:
+            exact = product.get('productId') == selected.get('productId') and product.get('retailer') == selected.get('retailer')
+            decision = {'status': 'accepted' if exact else 'rejected', 'reason': 'Zelf gekozen product' if exact else 'Ander product dan de gekozen variant'}
         quantity = item.get('quantity', 1)
         # The purchase unit depends on the request, never on the candidate.
         # Piece requests can trigger family inference, so do this once per
@@ -108,7 +112,7 @@ def match_item_json(text):
     request = json.loads(text)
     item = request['item']
     wanted = set()
-    for query in re.split(r'\s*/\s*|\s+of\s+', item['query']):
+    for query in re.split(r'\s*/\s*|\s+of\s+', item.get('selectedProduct', {}).get('name') or item['query']):
         if not query.strip():
             continue
         family = product_intent({**item, 'query': query})['family']
@@ -119,9 +123,13 @@ def match_item_json(text):
     for token, identifiers_for_word in _index.items():
         if any(word_matches(token, anchor) for anchor in wanted):
             identifiers.update(identifiers_for_word)
+    selected = item.get('selectedProduct')
+    if selected:
+        identifiers.update(i for i, p in enumerate(_catalogue) if p.get('productId') == selected.get('productId') and p.get('retailer') == selected.get('retailer'))
     products = [_catalogue[index] for index in sorted(identifiers)] + request.get('extra', [])
     decisions = evaluate([{'item': item, 'product': product} for product in products])
     return json.dumps({'candidates': [dict(product=product, decision=decision)
                                       for product, decision in zip(products, decisions)
                                       if decision['status'] != 'rejected'],
+                       'reason': ('Het gekozen product is niet beschikbaar in deze bronresultaten' if item.get('selectedProduct') else next((d['reason'] for d in decisions if d.get('reason', '').startswith('Gevraagde kenmerken ontbreken:')), 'Geen passend product gevonden in de geraadpleegde bronnen.')),
                        'checked': len(products)}, ensure_ascii=False, allow_nan=False)

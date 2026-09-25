@@ -903,3 +903,19 @@ body > main ul {
 }
 .comparison-settings > .settings-fields { grid-template-columns: 1fr 1fr 1fr; }
 @media (max-width: 400px) { .comparison-settings > .settings-fields { grid-template-columns: 1fr 1fr; } .comparison-settings > .settings-fields > label:last-child { grid-column: 1 / -1; } }
+.missing-product { display: block; text-align: left; width: 100%; padding: 10px 0; border-bottom: 1px solid #e8dfc8; }
+.missing-product span { display: block; font-size: 12px; }
+.missing-product:hover strong { text-decoration: underline; }
+.resolve-label { color: #2563eb; margin-top: 3px; }
+.item-highlight { background: #eff6ff; box-shadow: inset 3px 0 #2563eb; scroll-margin-top: 20px; }
+.choose-product { grid-column: 1 / -1; text-align: left; color: #2563eb; font-size: 11px; padding: 2px 0; white-space: normal; }
+.product-picker { grid-column: 1 / -1; background: white; border: 1px solid #bfdbfe; border-radius: 6px; padding: 12px; min-width: 0; }
+.picker-heading { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.product-picker label { display: grid; gap: 4px; margin: 8px 0; font-size: 12px; }
+.product-picker input { border: 1px solid #dbe2ec; border-radius: 5px; padding: 8px; width: 100%; }
+.product-picker p { font-size: 11px; color: #64748b; margin-top: 7px; }
+.product-picker button { color: #2563eb; font-size: 12px; }
+.item-row .choose-product, .item-row .product-picker button { width: auto; color: #2563eb; }
+.item-row .choose-product:hover, .item-row .product-picker button:hover { color: #1d4ed8; text-decoration: underline; }
+.item-row .product-picker input { height: 36px; border: 1px solid #dbe2ec; background: white; padding: 6px 8px; }
+@media (max-width: 700px) { .item-row .product-picker input, .item-row .product-picker select { font-size: 16px; } }

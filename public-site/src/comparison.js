@@ -23,7 +23,7 @@ export function summarize(items,matched,{now=Date.now(),loyalty=false,sourceIssu
         choices.push({item,product:selectedProduct,decision:purchaseDecision,totalCents:price.totalCents});
       }
       choices.sort((a,b)=>a.totalCents-b.totalCents||(a.decision.overage??Infinity)-(b.decision.overage??Infinity));
-      rows.push({item,choices,reason:reasons[0]||'Geen passend product gevonden in de geraadpleegde bronnen.'});
+      rows.push({item,choices,reason:reasons[0]||matched[i].reason||'Geen passend product gevonden in de geraadpleegde bronnen.'});
     }
     const {lines,missing,allocationComplete}=allocateBasket(rows);
     if(!allocationComplete)sourceIssues.push(`${retailer}: de zoeklimiet voor gezamenlijke actielimieten is bereikt. De geselecteerde aankoop voldoet aan de limieten, maar de goedkoopste verdeling is niet bewezen.`);
@@ -67,7 +67,7 @@ export async function runComparison(items,catalogue,matcher,{signal,onProgress=(
   for(let i=0;i<items.length;i++) {
     signal?.throwIfAborted();const item=items[i];onProgress({done:i,total:items.length,query:item.query});
     const extra=[];
-    for(const alternative of item.query.split(/\s*\/\s*|\s+of\s+/i).filter(Boolean)) {
+    for(const alternative of (item.selectedProduct?.name||item.query).split(/\s*\/\s*|\s+of\s+/i).filter(Boolean)) {
       const query=alternative.trim().toLowerCase();
       if(!queries.has(query)&&!unavailable) {
         try {const result=await search(query,{signal});queries.set(query,result);
