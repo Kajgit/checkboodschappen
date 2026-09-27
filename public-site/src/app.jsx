@@ -16,7 +16,7 @@ import {
   Check,
 } from "lucide-react";
 import { ProductPicker } from "./product-picker.jsx";
-import { purchaseReview, basketSummary } from "./purchase-review.js";
+import { purchaseReview, basketSummary, withQuantity } from "./purchase-review.js";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -219,13 +219,20 @@ function Basket({ basket, result, index, onStatus, onResolve }) {
     </article>
   );
 }
-function PurchaseCheck({item,onQuery,onAmount,disabled}) {
-  const check=purchaseReview(item);
-  const [amount,setAmount]=useState("");
+function PurchaseCheck({item,check,onQuery,onAmount,disabled}) {
+  const [amount,setAmount]=useState(""),[chosenUnit,setChosenUnit]=useState("");
   if(!check)return null;
+  const unit=chosenUnit||check.unit;
   return <div className="purchase-check" role="region" aria-label={`Controleer ${item.query}`}>
     {check.variants.length>0 && <label>Welke variant?<select value="" disabled={disabled} onChange={e=>onQuery(e.target.value)}><option value="" disabled>Kies een variant</option>{check.variants.map(q=><option key={q} value={q}>{q}</option>)}</select></label>}
-    {check.amount && <div><label>Hoeveel {check.unit === 'g' ? 'gram' : 'ml'} in totaal?<input type="number" inputMode="decimal" min="0.001" max="100000" step="any" value={amount} disabled={disabled} onChange={e=>setAmount(e.target.value)} /></label><Button size="sm" variant="outline" disabled={disabled||!Number.isFinite(Number(amount))||Number(amount)<=0||Number(amount)>100000} onClick={()=>onAmount(Number(amount),check.unit)}>Hoeveelheid opslaan</Button><p>Bijvoorbeeld {check.unit === 'g' ? '500 g gehakt' : '1500 ml voor een fles van 1,5 liter'}. Of kies hieronder een exact product.</p></div>}
+    {check.amount && <div>
+      <p>{check.reason}</p>
+      {check.sizes?.length>0 && <label>Verpakkingsgrootte<select value="" disabled={disabled} onChange={e=>{const size=check.sizes[Number(e.target.value)];if(size)onAmount(size.quantity,size.unit);}}><option value="" disabled>Kies de bedoelde inhoud</option>{check.sizes.map((size,i)=><option key={`${size.unit}:${size.packAmount}`} value={i}>{size.packAmount} {size.unit} per verpakking · {size.quantity} {size.unit} totaal</option>)}</select></label>}
+      <label>Totale hoeveelheid<input type="number" inputMode="decimal" min="0.001" max="100000" step="any" value={amount} disabled={disabled} onChange={e=>setAmount(e.target.value)} /></label>
+      <label>Eenheid<select value={unit} disabled={disabled} onChange={e=>setChosenUnit(e.target.value)}>{(check.units?.length?check.units:[check.unit]).map(u=><option key={u} value={u}>{u==='g'?'gram':u==='ml'?'ml':'stuks'}</option>)}</select></label>
+      <Button size="sm" variant="outline" disabled={disabled||!Number.isFinite(Number(amount))||Number(amount)<=0||Number(amount)>100000} onClick={()=>onAmount(Number(amount),unit)}>Hoeveelheid opslaan</Button>
+      <p>Met deze hoeveelheid vergelijken we bij alle winkels in je zoekgebied.</p>
+    </div>}
   </div>;
 }
 function App() {
@@ -236,6 +243,7 @@ function App() {
     [review, setReview] = useState(null),
     [pickerId, setPickerId] = useState(null),
     [checking, setChecking] = useState(false),
+    [quantityReviews, setQuantityReviews] = useState([]),
     [postcode, setPostcode] = useState(""),
     [radius, setRadius] = useState(10),
     [maxStores, setMaxStores] = useState(2),
@@ -271,6 +279,10 @@ function App() {
       run.current?.matcher.close();
     };
   }, []);
+  function reviewFor(item) {
+    if(item.selectedProduct)return null;
+    return purchaseReview(item)||quantityReviews.find(row=>row.item.id===item.id&&row.item.query===item.query&&row.item.unit===item.unit&&row.item.quantity===item.quantity)?.review;
+  }
   function openPicker(id) {
     setPickerId(id);
     requestAnimationFrame(() => {
@@ -400,7 +412,7 @@ function App() {
     if (busy) return;
     setBusy(true);
     if ((await queue.current) === false) {setBusy(false);return;}
-    const unchecked=current.current.items.filter(item=>purchaseReview(item));
+    const unchecked=current.current.items.filter(item=>reviewFor(item));
     if(unchecked.length){
       setChecking(true);
       setBusy(false);
@@ -455,7 +467,12 @@ function App() {
         },
       );
       setResult(data);
-      setMessage("Vergelijking bijgewerkt.");
+      setQuantityReviews(data.reviews||[]);
+      if(data.reviews?.length){
+        setChecking(true);
+        setMessage(`Kies de hoeveelheid voor ${data.reviews.length} producten. Deze regels zijn nog niet meegerekend.`);
+        requestAnimationFrame(()=>{const row=document.getElementById(`item-${data.reviews[0].item.id}`);row?.scrollIntoView({behavior:'smooth',block:'center'});row?.querySelector('.purchase-check select, .purchase-check input')?.focus({preventScroll:true});});
+      }else setMessage("Vergelijking bijgewerkt.");
     } catch (e) {
       setMessage(
         controller.signal.aborted
@@ -664,7 +681,7 @@ function App() {
                 list.items.map((item, i) => (
                   <div
                     id={`item-${item.id}`}
-                    className={`item-row ${pickerId === item.id || (checking && purchaseReview(item)) ? "item-highlight" : ""}`}
+                    className={`item-row ${pickerId === item.id || (checking && reviewFor(item)) ? "item-highlight" : ""}`}
                     key={`${item.id}:${item.query}:${item.quantity}:${item.unit}`}
                   >
                     <Input
@@ -718,7 +735,7 @@ function App() {
                       <Trash2 size={14} />
                     </Button>
                     <button type="button" className="choose-product" disabled={busy} aria-expanded={pickerId === item.id} onClick={() => pickerId === item.id ? setPickerId(null) : openPicker(item.id)}>{item.selectedProduct ? `${item.selectedProduct.name} · ${item.selectedProduct.retailer}` : "Product kiezen"}</button>
-                    {checking && <PurchaseCheck item={item} disabled={busy} onQuery={q=>edit(item.id,'query',q)} onAmount={(quantity,unit)=>save(next=>{Object.assign(next.items.find(i=>i.id===item.id),{quantity,unit});return next;})} />}
+                    {checking && <PurchaseCheck key={`${item.id}:${item.query}:${item.unit}`} item={item} check={reviewFor(item)} disabled={busy} onQuery={q=>edit(item.id,'query',q)} onAmount={(quantity,unit)=>save(next=>{next.items=next.items.map(i=>i.id===item.id?withQuantity(i,quantity,unit):i);return next;})} />}
                     {pickerId === item.id && <ProductPicker item={item} onSelect={p => chooseProduct(item.id,p)} onClose={() => setPickerId(null)} />}
                   </div>
                 ))

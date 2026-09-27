@@ -39,3 +39,30 @@ def test_failed_load_keeps_previous_catalogue_and_discards_staging():
     assert m._index == {'komkommer': [0]}
     with pytest.raises(ValueError):
         m.catalogue_batch_json('commit')
+
+
+def test_browser_reports_real_contents_independently_of_requested_pack_count():
+    m = bridge()
+    items = []
+    for size in ['250 g', '1 kg', '6 x 1 l', '']:
+        items.append({'item': {'query': 'rijst', 'quantity': 2, 'unit': 'verpakking'},
+                      'product': {'name': 'Rijst', 'package': size}})
+    rows = m.evaluate(items)
+    assert [(r['contentsAmount'], r['contentsDimension']) for r in rows] == [
+        (250, 'weight'), (1000, 'weight'), (6000, 'volume'), (None, None)]
+    assert all(r['packageAmount'] == 1 and r['packages'] == 2 for r in rows)
+    assert rows[-1]['packageWarning']
+
+
+def test_large_pack_label_does_not_hide_a_valid_size_from_store_comparison():
+    m = bridge()
+    products = [{'name': 'AH Hutspot', 'package': '500 g', 'category': 'groente'},
+                {'name': 'AH Hutspot grootverpakking', 'package': '1 kg', 'category': 'groente'}]
+    rows = m.evaluate([{'item': {'query': 'hutspot', 'quantity': 1, 'unit': 'verpakking'},
+                        'product': p} for p in products])
+    assert [r['status'] for r in rows] == ['accepted', 'accepted']
+    assert [r['contentsAmount'] for r in rows] == [500, 1000]
+    # A requested large pack must still not silently become a different-size small pack.
+    specific = m.evaluate([{'item': {'query': 'hutspot grootverpakking', 'quantity': 1, 'unit': 'verpakking'},
+                           'product': products[0]}])[0]
+    assert specific['status'] != 'accepted'

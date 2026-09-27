@@ -1,15 +1,17 @@
 import {basketPrice} from './prijsprofeet.js';
 import {allocateBasket} from './basket-allocation.js';
-import {purchaseReview} from './purchase-review.js';
+import {purchaseReview,packageReview} from './purchase-review.js';
 export function summarize(items,matched,{now=Date.now(),loyalty=false,sourceIssues=[]}={}) {
   const retailerNames=new Set();
   for(const result of matched) for(const candidate of result.candidates) retailerNames.add(candidate.product.retailer);
   const baskets=[];sourceIssues=[...sourceIssues];
+  const reviews=items.map((item,i)=>({item,review:purchaseReview(item)||packageReview(item,matched[i].candidates,{now})})).filter(row=>row.review);
+  const reviewById=new Map(reviews.map(row=>[row.item.id,row.review]));
   for(const retailer of retailerNames) {
     const rows=[];
     for(let i=0;i<items.length;i++) {
       const item=items[i],choices=[],reasons=[];
-      const review=purchaseReview(item);
+      const review=reviewById.get(item.id);
       if(review){rows.push({item,choices,reason:review.reason});continue;}
       for(const {product,decision} of matched[i].candidates.filter(c=>c.product.retailer===retailer)) {
         if(decision.status!=='accepted') {reasons.push(decision.reason);continue;}
@@ -34,7 +36,7 @@ export function summarize(items,matched,{now=Date.now(),loyalty=false,sourceIssu
   }
   // Completeness always precedes price. A cheap partial basket cannot win.
   baskets.sort((a,b)=>Number(b.complete)-Number(a.complete)||a.missing.length-b.missing.length||a.totalCents-b.totalCents);
-  return {baskets,sourceIssues,searchComplete:sourceIssues.length===0,createdAt:now,itemCount:items.length};
+  return {baskets,reviews,sourceIssues,searchComplete:sourceIssues.length===0,createdAt:now,itemCount:items.length};
 }
 const sourceMessages={source_not_enabled:'PrijsProfeet is nog niet ingeschakeld.',provider_busy:'PrijsProfeet is druk; niet alle zoekopdrachten zijn uitgevoerd.',
   provider_rate_limited:'PrijsProfeet beperkt tijdelijk het aantal verzoeken.',visitor_budget_exhausted:'Je hebt de tijdelijke zoeklimiet bereikt.',

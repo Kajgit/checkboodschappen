@@ -49,8 +49,11 @@ def evaluate(data):
         count, amount, dimension, desired, overage = quantity_details(quantity, unit, product.get('package'), product['name'])
         if decision['status'] == 'accepted' and amount is None:
             decision = {**decision, 'status': 'quantity_unknown', 'reason': 'Verpakkingsinhoud ontbreekt of past niet bij de gevraagde eenheid'}
+        contents = parse_amount(product.get('package')) or parse_amount(product['name'])
         results.append({**decision, 'packages': count, 'packageAmount': amount,
-                        'packageWarning': None if parse_amount(product.get('package')) or parse_amount(product['name']) else 'Verpakkingsinhoud niet bevestigd door de bron',
+                        'contentsAmount': contents[0] if contents else None,
+                        'contentsDimension': contents[1] if contents else None,
+                        'packageWarning': None if contents else 'Verpakkingsinhoud niet bevestigd door de bron',
                         'dimension': dimension, 'desired': desired, 'overage': overage})
     return results
 

@@ -172,7 +172,7 @@ FAMILY_BRANDS = {
     'sperziebonen': ('hak', 'bonduelle'),
 }
 COMMON_LABEL_WORDS = '''bio biologisch biologische vers verse naturel original normaal normale
-    voordeel voordeelverpakking kleinverpakking verpakking groot grote klein kleine mini
+    voordeel voordeelverpakking grootverpakking kleinverpakking verpakking groot grote klein kleine mini
     kilo kg g gr gram ml cl dl l liter stuk stuks st ca circa per pak zak net pot blik fles
     met zonder en de het van in uit a x s vegan plantaardig plantaardige halal
     duurzaam beter leven ster sterren voordeelverpak natuurlijk natuurlijke fairtrade msc asc'''.split()

@@ -114,7 +114,7 @@ test('member selection changes payable total and receipt label only with opt-in'
  const p=normalizeProduct({product_id:'member-example',retailer:'lidl',name:'Rijst',price:2,loyalty_price:1.5,loyalty_program:'Testkaart',quantity:'500 g',promotion_status:'shelf',extracted_at:new Date(now).toISOString()},{now});
  const item={id:'member',query:'rijst',quantity:1,unit:'verpakking'};
  for(const loyalty of [false,true]){
-  const result=summarize([item],[{candidates:[{product:p,decision:{status:'accepted',packages:1,overage:0}}]}],{now,loyalty});
+  const result=summarize([item],[{candidates:[{product:p,decision:{status:'accepted',packages:1,overage:0,contentsAmount:500,contentsDimension:'weight'}}]}],{now,loyalty});
   const basket=result.baskets[0];assert.equal(basket.totalCents,loyalty?150:200);
   assert.equal(basket.lines[0].product.loyaltyRequired,loyalty);
   assert.equal(receiptRows(basket,result).some(row=>row.text.includes('Ledenprijs: klantenkaart vereist (Testkaart)')),loyalty);

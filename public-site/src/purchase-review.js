@@ -15,6 +15,29 @@ export function purchaseReview(item) {
  return {variants,amount,unit:volume?'ml':'g',reason:variants.length?'Kies een variant of een exact product.':'Vul gram of ml in, of kies een exact product.'};
 }
 
+// Compare package contents across the whole candidate set, before allocating stores.
+// A cheap 150 g pack cannot silently stand in for a 1 kg pack requested elsewhere.
+export function packageReview(item,candidates,{now=Date.now()}={}) {
+ if(item.selectedProduct||item.unit!=='verpakking')return null;
+ const sizes=new Map();let unknown=false,found=false;
+ for(const {product,decision} of candidates) {
+  if(decision.status!=='accepted'||!product.eligible||product.expiresAt<=now)continue;
+  found=true;
+  const unit={weight:'g',volume:'ml',count:'stuk'}[decision.contentsDimension],amount=decision.contentsAmount;
+  if(!unit||!Number.isFinite(amount)||amount<=0){unknown=true;continue;}
+  sizes.set(`${unit}:${amount}`,{quantity:amount*item.quantity,unit,packAmount:amount});
+ }
+ if(!found||(!unknown&&sizes.size===1))return null;
+ const options=[...sizes.values()].sort((a,b)=>a.unit.localeCompare(b.unit)||a.quantity-b.quantity);
+ return {variants:[],amount:true,unit:options[0]?.unit||'g',units:[...new Set(options.map(o=>o.unit).concat(unknown?['g','ml','stuk']:[]))],sizes:options,
+  reason:unknown?'Verpakkingsinhoud ontbreekt. Kies de totale hoeveelheid of een exact product.':'Verschillende verpakkingsgroottes gevonden. Kies de totale hoeveelheid.'};
+}
+
+export function withQuantity(item,quantity,unit) {
+ const {selectedProduct,...rest}=item;
+ return {...rest,quantity,unit};
+}
+
 export function basketSummary(basket,itemCount) {
  const missing=basket.missing.length;
  return {

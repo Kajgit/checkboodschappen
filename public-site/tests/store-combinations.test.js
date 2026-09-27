@@ -32,7 +32,7 @@ test('pair allocation can recover lines omitted by each individually capped sing
  const {summarize}=await import('../src/comparison.js');
  const items=[item('first'),item('second')];
  const candidates=['A','B'].map(retailer=>({product:{retailer,productId:'limited',stableId:'limited',source:{name:'fixture'},
-  name:'Rijst',priceCents:100,eligible:true,issues:[],expiresAt:Date.now()+60000,maxPerCustomer:1},decision:{status:'accepted',packages:1,overage:0}}));
+  name:'Rijst',priceCents:100,eligible:true,issues:[],expiresAt:Date.now()+60000,maxPerCustomer:1},decision:{status:'accepted',packages:1,overage:0,contentsAmount:500,contentsDimension:'weight'}}));
  const result=summarize(items,items.map(()=>({candidates})));
  assert.ok(result.baskets.every(b=>b.lines.length===1));
  result.baskets=result.baskets.map(b=>({...b,store:{retailer:b.retailer,name:b.retailer,lat:52,lon:5.01,distanceKm:1},travelCents:0,totalWithTravelCents:b.totalCents}));
@@ -62,4 +62,20 @@ test('four-shop trip finds the shortest round trip regardless of input order',as
  assert.ok(Math.abs(a.distance-b.distance)<1e-8);
  const {distanceKm}=await import('../src/locations.js');
  assert.ok(Math.abs(a.distance-2*distanceKm(origin,shops[0]))<.001);
+});
+
+test('nearby chains compete on the same quantities; a cheaper third chain is not pinned out',async()=>{
+ const {summarize}=await import('../src/comparison.js');
+ const {applyLocations}=await import('../src/locations.js');
+ const requests=[{id:'rice',query:'rijst',quantity:1000,unit:'g'},{id:'milk',query:'volle melk',quantity:2000,unit:'ml'}];
+ const offer=(retailer,priceCents,packages)=>({product:{retailer,name:'Fixture',eligible:true,priceCents,expiresAt:Date.now()+60000},decision:{status:'accepted',packages}});
+ const matched=[{candidates:[offer('Albert Heijn',200,1),offer('Lidl',190,1),offer('Dirk',80,2),offer('FarAway',1,1)]},
+  {candidates:[offer('Albert Heijn',90,2),offer('Lidl',120,2),offer('Dirk',130,2),offer('FarAway',1,1)]}];
+ const dataset={sourceDate:new Date().toISOString(),stores:['Albert Heijn','Lidl','Dirk','FarAway'].map((retailer,i)=>({id:String(i),retailer,name:retailer,lat:52,lon:i===3?6:5.01+i*.001}))};
+ const located=applyLocations(summarize(requests,matched),origin,dataset,{radius:10,costPerKm:0});
+ assert.deepEqual(located.excludedRetailers,['FarAway']);
+ const single=addStoreCombinations(located,{maxStores:1}).baskets[0];assert.equal(single.retailer,'Albert Heijn');assert.equal(single.totalCents,380);
+ const pair=addStoreCombinations(located,{maxStores:2}).baskets[0];
+ assert.equal(pair.totalCents,340);assert.deepEqual(new Set(pair.stores.map(s=>s.retailer)),new Set(['Albert Heijn','Dirk']));
+ assert.equal(pair.lines.find(l=>l.item.id==='rice').decision.packages,2);
 });
