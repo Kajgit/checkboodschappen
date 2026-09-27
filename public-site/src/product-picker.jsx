@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {loadAvailableCatalogue} from './checkjebon.js';
 const normalize=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 export function ProductPicker({item,onSelect,onClose}){
- const [query,setQuery]=useState(item.query.replace(/vleeswaren\s*/i,'').replace(/chocopasta/i,'choco').replace(/ongezoete?\s*/i,''));
+ const [query,setQuery]=useState(item.query.replace(/vleeswaren\s*/i,'').replace(/chocopasta/i,'choco').replace(/ongezoete?\s*/i,'').replace(/\b(?:ice[ -]?tea|iced tea)\b/i,'ijsthee'));
  const [catalogue,setCatalogue]=useState(null),[error,setError]=useState('');
  useEffect(()=>{let alive=true;const controller=new AbortController();loadAvailableCatalogue({signal:controller.signal}).then(data=>{if(alive){setCatalogue(data);if(data.sourceIssues?.length)setError('Niet alle brongegevens zijn beschikbaar.');}}).catch(e=>{if(alive)setError(e.message);});return()=>{alive=false;controller.abort();};},[]);
  const indexed=useMemo(()=>[...new Map((catalogue?.products||[]).map(p=>[`${p.retailer}:${p.productId}`,{...p,searchName:normalize(p.name)}])).values()],[catalogue]);

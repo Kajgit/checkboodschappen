@@ -81,7 +81,7 @@ def variant_rejection(item: dict, candidate: str) -> str | None:
 # must not classify the brand Casa Mayor as mayonnaise.
 PRODUCT_GROUPS = (
     ('dierenvoer', ('kattenvoer', 'hondenvoer', 'dierenvoeding', 'sheba', 'whiskas', 'felix'), ()),
-    ('drank', ('bruiswater', 'frisdrank', 'limonade', 'lemonade', 'juice', 'shot', 'groenteshot', 'smoothie', 'thee', 'bier'), ('frisdrank',)),
+    ('drank', ('bruiswater', 'frisdrank', 'limonade', 'lemonade', 'juice', 'shot', 'groenteshot', 'smoothie', 'thee', 'bier'), ('frisdrank', 'ijsthee')),
     ('bakkerij', ('crouton', 'croutons', 'baguette', 'picos', 'cracker', 'crackers', 'tarwe', 'tijger', 'wrap', 'wraps', 'boterhamkorrels'), ('brood', 'broodjes', 'tortillas', 'pitabroodjes')),
     ('vleessnack', ('frikandel', 'bitterbal', 'kroket', 'kipnugget'), ()),
     ('kruidenbereiding', ('dipmix', 'knoflookkruiden', 'kruidenboter'), ()),
@@ -108,6 +108,11 @@ def requested_brands(query: str) -> tuple[str, ...]:
 
 
 def identity_rejection(item: dict, name: str, family: str, candidate: dict | None = None) -> str | None:
+    if family in {'fanta', 'ijsthee'}:
+        sugar_free = ('zero', 'suikervrij', 'zonder suiker', 'sugar free')
+        if any(exact_phrase(name, term) for term in sugar_free) and not any(
+                exact_phrase(str(item.get('query', '')), term) for term in sugar_free):
+            return 'Suikervrije variant is niet gevraagd'
     if family in {'kipfilet', 'gehakt', 'rundergehakt', 'slavink', 'shoarmavlees',
                   'creme_fraiche', 'boter', 'yoghurt', 'melk', 'kaas',
                   'geraspte_kaas', 'parmezaan', 'kookroom'}:
@@ -159,6 +164,7 @@ FAMILY_BRANDS = {
     'creme_fraiche': ('campina', 'president', 'oing'),
     'yoghurt': ('campina', 'fage', 'kolios', 'dodoni', 'elinas', 'zuivelhoeve'),
     'melk': ('campina', 'arla'),
+    'ijsthee': ('lipton', 'fuze tea', 'fuzetea', 'nestea'),
     'mais': ('bonduelle', 'hak', 'del monte', 'green giant'),
     'tomatenpuree': ('mutti', 'del monte', 'cirio', 'heinz'),
     'citroensap': ('limochef', 'polenghi', 'sicilia'),
@@ -226,6 +232,7 @@ FAMILY_LABEL_WORDS.update({
     'hagelslag': 'chocolade melk puur pure witte wit extra',
     'chocopasta': 'chocolade melk puur pure witte wit hazelnoot hazelnoten duo',
     'fanta': 'orange sinaasappel cassis lemon citroen exotic strawberry kiwi zero sugar suiker',
+    'ijsthee': 'perzik peach citroen lemon green groene original sparkling bruisend zero sugar suiker',
 })
 FAMILY_BRANDS.update({'smeerworst': ('kips', 'kroon'), 'vlokken': ('de ruijter', 'venz'),
                      'hagelslag': ('de ruijter', 'venz'), 'chocopasta': ('nutella', 'duo penotti', 'penotti')})

@@ -2,7 +2,7 @@
 import json
 import math
 import re
-from .groceries import candidate_decision, quantity_details, purchase_unit, product_intent
+from .groceries import candidate_decision, quantity_details, purchase_unit, product_intent, package_data_issue, parse_amount
 
 
 def evaluate(data):
@@ -32,6 +32,9 @@ def evaluate(data):
         if selected:
             exact = product.get('productId') == selected.get('productId') and product.get('retailer') == selected.get('retailer')
             decision = {'status': 'accepted' if exact else 'rejected', 'reason': 'Zelf gekozen product' if exact else 'Ander product dan de gekozen variant'}
+        package_issue = package_data_issue(product['name'], product.get('package'))
+        if package_issue:
+            decision = {'status': 'rejected', 'reason': package_issue}
         quantity = item.get('quantity', 1)
         # The purchase unit depends on the request, never on the candidate.
         # Piece requests can trigger family inference, so do this once per
@@ -47,6 +50,7 @@ def evaluate(data):
         if decision['status'] == 'accepted' and amount is None:
             decision = {**decision, 'status': 'quantity_unknown', 'reason': 'Verpakkingsinhoud ontbreekt of past niet bij de gevraagde eenheid'}
         results.append({**decision, 'packages': count, 'packageAmount': amount,
+                        'packageWarning': None if parse_amount(product.get('package')) or parse_amount(product['name']) else 'Verpakkingsinhoud niet bevestigd door de bron',
                         'dimension': dimension, 'desired': desired, 'overage': overage})
     return results
 
@@ -128,8 +132,12 @@ def match_item_json(text):
         identifiers.update(i for i, p in enumerate(_catalogue) if p.get('productId') == selected.get('productId') and p.get('retailer') == selected.get('retailer'))
     products = [_catalogue[index] for index in sorted(identifiers)] + request.get('extra', [])
     decisions = evaluate([{'item': item, 'product': product} for product in products])
+    selected_problem = next((decision['reason'] for product, decision in zip(products, decisions)
+                             if selected and product.get('productId') == selected.get('productId')
+                             and product.get('retailer') == selected.get('retailer')
+                             and decision['status'] != 'accepted'), None)
     return json.dumps({'candidates': [dict(product=product, decision=decision)
                                       for product, decision in zip(products, decisions)
                                       if decision['status'] != 'rejected'],
-                       'reason': ('Het gekozen product is niet beschikbaar in deze bronresultaten' if item.get('selectedProduct') else next((d['reason'] for d in decisions if d.get('reason', '').startswith('Gevraagde kenmerken ontbreken:')), 'Geen passend product gevonden in de geraadpleegde bronnen.')),
+                       'reason': (selected_problem or 'Het gekozen product is niet beschikbaar in deze bronresultaten' if selected else next((d['reason'] for d in decisions if d.get('reason', '').startswith('Gevraagde kenmerken ontbreken:')), 'Geen passend product gevonden in de geraadpleegde bronnen.')),
                        'checked': len(products)}, ensure_ascii=False, allow_nan=False)

@@ -2,6 +2,7 @@ import {PDFDocument,PDFName,PDFString} from '../vendor/pdf-lib.js';
 import {zipSync} from '../vendor/fflate.js';
 import {receiptRows,paginateRows,RECEIPT_SOURCES,wrapText} from './receipt-model.js';
 import {safeProductUrl} from './links.js';
+import {basketSummary} from './purchase-review.js';
 const WIDTH=600,MARGIN=38,MAX_BODY=900;
 const money=n=>new Intl.NumberFormat('nl-NL',{style:'currency',currency:'EUR'}).format(n/100);
 const font=(size,bold=false)=>`${bold?'600':'400'} ${size}px "Public Sans", sans-serif`;
@@ -10,7 +11,8 @@ function sources(comparison){return comparison.location?[...RECEIPT_SOURCES,{nam
 export function renderReceiptPages(basket,comparison,logo=null) {
  const measuring=canvas().getContext('2d');if(!measuring)throw new Error('Afbeeldingen worden niet ondersteund door deze browser.');
  measuring.font=font(19,true);const title=wrapText(basket.retailer,WIDTH-2*MARGIN,t=>measuring.measureText(t).width);
- const TOP=190+title.length*25;
+ const TOP=230+title.length*25;
+ const summary=basketSummary(basket,comparison.itemCount);
  const pages=paginateRows(receiptRows(basket,comparison),{width:WIDTH-2*MARGIN,height:MAX_BODY,compact:true,
  measure:(text,size,kind)=>{measuring.font=font(size,['heading','total'].includes(kind));return measuring.measureText(text).width;}});
  const heights=pages.map(rows=>TOP+(rows.at(-1)?.y||0)+38+sources(comparison).length*18+65);
@@ -20,10 +22,12 @@ export function renderReceiptPages(basket,comparison,logo=null) {
   if(logo)ctx.drawImage(logo,MARGIN,25,30,30);
   ctx.font=font(15,true);ctx.fillStyle='#1e293b';ctx.fillText('Checkboodschappen',MARGIN+(logo?38:0),47);
   ctx.textAlign='right';ctx.font=font(11);ctx.fillStyle='#64748b';ctx.fillText(`BOODSCHAPPENBON · ${index+1}/${pages.length}`,WIDTH-MARGIN,52);ctx.textAlign='left';
-  ctx.font=font(12);ctx.fillText(basket.complete?'BOODSCHAPPEN':'GEDEELTELIJK MANDJE',MARGIN,91);
+  ctx.font=font(12);ctx.fillText(summary.label.toUpperCase(),MARGIN,91);
   ctx.fillStyle='#172337';ctx.font=font(46,true);ctx.fillText(money(basket.totalWithTravelCents??basket.totalCents),MARGIN,143);
   ctx.font=font(19,true);for(const [i,text] of title.entries())ctx.fillText(text,MARGIN,178+i*25);
-  ctx.font=font(11);ctx.fillStyle='#64748b';ctx.fillText(`${basket.lines.length}/${comparison.itemCount} producten · ${new Date(comparison.createdAt).toLocaleString('nl-NL',{timeZone:'Europe/Amsterdam'})}`,MARGIN,TOP-15);
+  ctx.font=font(12,true);ctx.fillStyle=basket.complete?'#64748b':'#946020';ctx.fillText(summary.coverage,MARGIN,TOP-53);
+  ctx.font=font(11);ctx.fillStyle='#64748b';ctx.fillText('Statiegeld niet apart berekend. Controleer prijs en verpakking.',MARGIN,TOP-35);
+  ctx.fillText(new Date(comparison.createdAt).toLocaleString('nl-NL',{timeZone:'Europe/Amsterdam'}),MARGIN,TOP-17);
   ctx.strokeStyle='#b9c3d1';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(MARGIN,TOP);ctx.lineTo(WIDTH-MARGIN,TOP);ctx.stroke();ctx.setLineDash([]);
   for(const row of rows){ctx.fillStyle=row.kind==='warning'?'#946020':['small','credit'].includes(row.kind)?'#68758a':'#1e293b';ctx.font=font(row.size,['heading','total'].includes(row.kind));
    ctx.fillText(row.text,MARGIN,TOP+row.y);

@@ -9,9 +9,11 @@ export function receiptRows(basket,comparison) {
   activeGroup=`product-${index}`;
   add(`${line.product.name} — ${money(line.totalCents)}`,'heading',{label:line.product.name,amount:money(line.totalCents),url:line.product.productUrl});
   add(`${line.decision.packages} × ${line.product.package||'verpakking'} · ${line.product.retailer||''} · ${line.product.source.name}`,'small',{url:line.product.source.url});
+  if(line.decision.packageWarning)add(line.decision.packageWarning,'warning');
+  add(`Gevraagd: ${line.item.quantity} ${line.item.unit}`,'small');
   if(line.product.maxPerCustomer)add(`Deze prijs geldt voor maximaal ${line.product.maxPerCustomer} verpakking(en) per klant, over alle regels samen.`,'small');
   if(line.decision.promotionExtraPackages)add(`Actie: ${line.decision.promotionExtraPackages} extra verpakking(en).`,'small');
-  if(line.decision.overage>0)add(`Gevraagd ${line.item.quantity} ${line.item.unit} · extra ${Number(line.decision.overage.toFixed(3))} ${{weight:'g',volume:'ml',count:'stuk(s)',package:'verpakking(en)'}[line.decision.dimension]||''}`,'small');
+  if(line.decision.overage>0)add(`Extra: ${Number(line.decision.overage.toFixed(3))} ${{weight:'g',volume:'ml',count:'stuk(s)',package:'verpakking(en)'}[line.decision.dimension]||''}`,'small');
   if(line.product.loyaltyRequired)add(`Ledenprijs: klantenkaart vereist${line.product.loyaltyProgram?` (${line.product.loyaltyProgram})`:''}.`,'warning');
  }
  activeGroup='totals';

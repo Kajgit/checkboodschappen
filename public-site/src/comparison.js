@@ -1,5 +1,6 @@
 import {basketPrice} from './prijsprofeet.js';
 import {allocateBasket} from './basket-allocation.js';
+import {purchaseReview} from './purchase-review.js';
 export function summarize(items,matched,{now=Date.now(),loyalty=false,sourceIssues=[]}={}) {
   const retailerNames=new Set();
   for(const result of matched) for(const candidate of result.candidates) retailerNames.add(candidate.product.retailer);
@@ -8,6 +9,8 @@ export function summarize(items,matched,{now=Date.now(),loyalty=false,sourceIssu
     const rows=[];
     for(let i=0;i<items.length;i++) {
       const item=items[i],choices=[],reasons=[];
+      const review=purchaseReview(item);
+      if(review){rows.push({item,choices,reason:review.reason});continue;}
       for(const {product,decision} of matched[i].candidates.filter(c=>c.product.retailer===retailer)) {
         if(decision.status!=='accepted') {reasons.push(decision.reason);continue;}
         // A complete offer group can satisfy a smaller requested amount by

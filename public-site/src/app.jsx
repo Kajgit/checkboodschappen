@@ -16,6 +16,7 @@ import {
   Check,
 } from "lucide-react";
 import { ProductPicker } from "./product-picker.jsx";
+import { purchaseReview, basketSummary } from "./purchase-review.js";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -65,6 +66,7 @@ function Credit({ source }) {
   );
 }
 function Basket({ basket, result, index, onStatus, onResolve }) {
+  const summary = basketSummary(basket, result.itemCount);
   const [exporting, setExporting] = useState("");
   async function exportBon(format) {
     setExporting(format);
@@ -106,16 +108,17 @@ function Basket({ basket, result, index, onStatus, onResolve }) {
           </div>
           <p className={basket.complete ? "coverage" : "missing"}>
             {basket.complete ? <Check size={13} /> : null}
-            {basket.lines.length}/{result.itemCount} producten ·{" "}
+            {summary.coverage} ·{" "}
             {basket.stores.length}{" "}
             {basket.stores.length === 1 ? "winkel" : "winkels"}
           </p>
         </div>
         <div className="price">
           {money(basket.totalWithTravelCents)}
-          <span>{basket.complete ? "totaal" : "gedeeltelijk"}</span>
+          <span>{summary.label}{basket.travelCents > 0 ? " incl. reis" : ""}</span>
         </div>
       </div>
+      <p className="basket-caveat">{summary.exclusions}</p>
       <div className="basket-meta">
         <MapPin size={13} />
         {basket.travelDistanceKm.toFixed(1)} km hemelsbreed heen en terug
@@ -143,6 +146,7 @@ function Basket({ basket, result, index, onStatus, onResolve }) {
                 {line.item.quantity} {line.item.unit}
               </small>
               {line.item.selectedProduct && <small>Zelf gekozen product</small>}
+              {line.decision.packageWarning && <small className="missing">{line.decision.packageWarning}</small>}
               {line.decision.overage > 0 && (
                 <small>
                   Extra: {Number(line.decision.overage.toFixed(3))}{" "}
@@ -215,6 +219,15 @@ function Basket({ basket, result, index, onStatus, onResolve }) {
     </article>
   );
 }
+function PurchaseCheck({item,onQuery,onAmount,disabled}) {
+  const check=purchaseReview(item);
+  const [amount,setAmount]=useState("");
+  if(!check)return null;
+  return <div className="purchase-check" role="region" aria-label={`Controleer ${item.query}`}>
+    {check.variants.length>0 && <label>Welke variant?<select value="" disabled={disabled} onChange={e=>onQuery(e.target.value)}><option value="" disabled>Kies een variant</option>{check.variants.map(q=><option key={q} value={q}>{q}</option>)}</select></label>}
+    {check.amount && <div><label>Hoeveel {check.unit === 'g' ? 'gram' : 'ml'} in totaal?<input type="number" inputMode="decimal" min="0.001" max="100000" step="any" value={amount} disabled={disabled} onChange={e=>setAmount(e.target.value)} /></label><Button size="sm" variant="outline" disabled={disabled||!Number.isFinite(Number(amount))||Number(amount)<=0||Number(amount)>100000} onClick={()=>onAmount(Number(amount),check.unit)}>Hoeveelheid opslaan</Button><p>Bijvoorbeeld {check.unit === 'g' ? '500 g gehakt' : '1500 ml voor een fles van 1,5 liter'}. Of kies hieronder een exact product.</p></div>}
+  </div>;
+}
 function App() {
   const [list, setList] = useState(emptyList),
     [ready, setReady] = useState(false),
@@ -222,6 +235,7 @@ function App() {
     [people, setPeople] = useState(""),
     [review, setReview] = useState(null),
     [pickerId, setPickerId] = useState(null),
+    [checking, setChecking] = useState(false),
     [postcode, setPostcode] = useState(""),
     [radius, setRadius] = useState(10),
     [maxStores, setMaxStores] = useState(2),
@@ -385,6 +399,15 @@ function App() {
   async function compare() {
     if (busy) return;
     setBusy(true);
+    if ((await queue.current) === false) {setBusy(false);return;}
+    const unchecked=current.current.items.filter(item=>purchaseReview(item));
+    if(unchecked.length){
+      setChecking(true);
+      setBusy(false);
+      setMessage(`Controleer de variant of hoeveelheid van ${unchecked.length} producten.`);
+      requestAnimationFrame(()=>{const row=document.getElementById(`item-${unchecked[0].id}`);row?.scrollIntoView({behavior:'smooth',block:'center'});row?.querySelector('.purchase-check select, .purchase-check input')?.focus({preventScroll:true});});
+      return;
+    }
     setResult(null);
     setProgress(0);
     const controller = new AbortController();
@@ -569,7 +592,7 @@ function App() {
                   <p>
                     {review.people
                       ? `Voorstellen voor ${review.people} personen. Pas ze aan aan je gerecht.`
-                      : "Vul ontbrekende hoeveelheden in of kies 1 verpakking."}
+                      : "Controleer de hoeveelheden. Je kunt ook een exact product kiezen in je lijst."}
                   </p>
                   {review.rows.map((row, index) => (
                     <div className="review-item" key={row.id}>
@@ -641,7 +664,7 @@ function App() {
                 list.items.map((item, i) => (
                   <div
                     id={`item-${item.id}`}
-                    className={`item-row ${pickerId === item.id ? "item-highlight" : ""}`}
+                    className={`item-row ${pickerId === item.id || (checking && purchaseReview(item)) ? "item-highlight" : ""}`}
                     key={`${item.id}:${item.query}:${item.quantity}:${item.unit}`}
                   >
                     <Input
@@ -695,6 +718,7 @@ function App() {
                       <Trash2 size={14} />
                     </Button>
                     <button type="button" className="choose-product" disabled={busy} aria-expanded={pickerId === item.id} onClick={() => pickerId === item.id ? setPickerId(null) : openPicker(item.id)}>{item.selectedProduct ? `${item.selectedProduct.name} · ${item.selectedProduct.retailer}` : "Product kiezen"}</button>
+                    {checking && <PurchaseCheck item={item} disabled={busy} onQuery={q=>edit(item.id,'query',q)} onAmount={(quantity,unit)=>save(next=>{Object.assign(next.items.find(i=>i.id===item.id),{quantity,unit});return next;})} />}
                     {pickerId === item.id && <ProductPicker item={item} onSelect={p => chooseProduct(item.id,p)} onClose={() => setPickerId(null)} />}
                   </div>
                 ))

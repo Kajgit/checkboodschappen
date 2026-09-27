@@ -383,6 +383,7 @@ FAMILY_RULES.update({
     "hagelslag": (("hagelslag",), ("gekleurde", "vruchten", "anijs")),
     "chocopasta": (("chocopasta", "chocoladepasta", "chocolade pasta", "hazelnootpasta"), ("koek", "croissant")),
     "fanta": (("fanta",), ("snoep", "ijs", "siroop")),
+    "ijsthee": (("ijsthee", "ice tea", "icetea", "iced tea"), ("snoep", "siroop", "theezakjes")),
 })
 
 def infer_profile(text: str) -> dict:
@@ -502,9 +503,30 @@ def _compatible_intent(item: dict, name: str, candidate: dict | None = None,
     return True
 
 
+def package_data_issue(name: str, package: str | None) -> str | None:
+    """Reject incompatible source units, even when buying by package or exact ID."""
+    contents = parse_amount(package)
+    if not contents or contents[1] != "volume":
+        return None
+    # Most volume-labelled entries are drinks. Avoid running the full family
+    # classifier for every one of them in the browser matcher.
+    if not any(term in name.lower() for term in ("aardappel", "gehakt", "kipfilet", "kip filet",
+            "shoarma", "kaas", "vlokken", "hagelslag", "chocoladepasta", "chocopasta", "hazelnootpasta")):
+        return None
+    family = infer_family(name)
+    weight_only = {"aardappelen", "gehakt", "rundergehakt", "kipfilet", "shoarmavlees",
+                   "geraspte_kaas", "kaas", "vlokken", "hagelslag", "chocopasta", "pindakaas"}
+    if family in weight_only:
+        return "Verpakkingsgegevens kloppen niet: inhoud in ml bij een vast product"
+    return None
+
+
 def candidate_decision(item: dict, name: str, candidate: dict | None = None,
                        intent: dict | None = None, has_managed_profile: bool | None = None) -> dict:
     intent = intent or product_intent(item)
+    package_issue = package_data_issue(name, (candidate or {}).get("quantity") or (candidate or {}).get("s") or (candidate or {}).get("package"))
+    if package_issue:
+        return {"status": "rejected", "reason": package_issue}
     reason = (identity_rejection(item, name, intent["family"], candidate)
               or variant_rejection(item, name)) or form_rejection(
         f"{item.get('query', '')} {intent['family'].replace('_', ' ')}", name)

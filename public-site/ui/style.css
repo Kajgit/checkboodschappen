@@ -919,3 +919,10 @@ body > main ul {
 .item-row .choose-product:hover, .item-row .product-picker button:hover { color: #1d4ed8; text-decoration: underline; }
 .item-row .product-picker input { height: 36px; border: 1px solid #dbe2ec; background: white; padding: 6px 8px; }
 @media (max-width: 700px) { .item-row .product-picker input, .item-row .product-picker select { font-size: 16px; } }
+.basket-caveat { margin: 0; padding: 0 20px 12px; font-size: 12px; color: #64748b; }
+.purchase-check { grid-column: 1 / -1; border-top: 1px solid #bfdbfe; padding: 10px 0; display: grid; gap: 10px; min-width: 0; }
+.purchase-check label { display: grid; gap: 5px; font-size: 12px; }
+.item-row .purchase-check input, .item-row .purchase-check select { border: 1px solid #bfdbfe; background: white; height: 36px; padding: 6px; width: 100%; }
+.item-row .purchase-check button { width: auto; margin-top: 8px; }
+.purchase-check p { font-size: 12px; color: #64748b; margin-top: 7px; }
+@media (max-width: 700px) { .item-row .purchase-check input, .item-row .purchase-check select { font-size: 16px; } .price span { max-width: 150px; } }

@@ -814,3 +814,47 @@ def test_browser_explicit_selection_keeps_quantity_checks_and_excludes_other_pro
     assert chosen['packages'] == 3
     assert other['status'] == 'rejected'
     assert unknown['status'] == 'quantity_unknown'
+
+
+def test_ice_tea_aliases_keep_explicit_flavour_and_dietary_requirements():
+    from app.groceries import candidate_decision
+    for query in ('ice tea perzik', 'ijsthee perzik', 'iced tea perzik'):
+        assert candidate_decision({'query': query}, 'IJsthee perzik')['status'] == 'accepted'
+        assert candidate_decision({'query': query}, 'IJsthee citroen')['status'] == 'rejected'
+    assert candidate_decision({'query': 'ijsthee perzik zero'}, 'IJsthee perzik')['status'] == 'rejected'
+    for name in ('IJsthee siroop perzik', 'IJsthee snoep perzik'):
+        assert candidate_decision({'query': 'ice tea'}, name)['status'] == 'rejected'
+
+
+def test_invalid_source_dimensions_cannot_be_bought_even_as_exact_packages():
+    import importlib.util
+    from app.groceries import candidate_decision, package_data_issue
+    spec = importlib.util.spec_from_file_location('app.audit_bridge', 'public-site/python/bridge.py')
+    bridge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bridge)
+    p = {'productId': 'bad-potatoes', 'retailer': 'Lidl', 'name': 'Aardappel iets kruim', 'package': '250 ml'}
+    assert package_data_issue(p['name'], p['package'])
+    assert candidate_decision({'query':'aardappelen'}, p['name'], {'quantity':p['package']})['status'] == 'rejected'
+    for unit, quantity in [('verpakking',1), ('ml',250), ('g',500)]:
+        item = {'query':'aardappelen', 'unit':unit, 'quantity':quantity, 'selectedProduct':p}
+        decision = bridge.evaluate([{'item':item,'product':p}])[0]
+        assert decision['status'] != 'accepted'
+    for name, package in [('Aardappelen','1 kg'),('Sperziebonen','370 ml'),('Kokosmelk','400 ml')]:
+        assert package_data_issue(name,package) is None
+
+
+def test_unknown_package_contents_are_disclosed_without_inventing_a_size():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('app.audit_bridge', 'public-site/python/bridge.py')
+    bridge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bridge)
+    p = {'name':'Kookroom classic','package':''}
+    result = bridge.evaluate([{'item':{'query':'kookroom','quantity':1,'unit':'verpakking'},'product':p}])[0]
+    assert result['packageWarning']
+
+
+def test_regular_drink_does_not_silently_become_zero():
+    from app.groceries import candidate_decision
+    for q,n in [('Fanta orange','Fanta Orange zero'),('ijsthee perzik','IJsthee perzik zero')]:
+        assert candidate_decision({'query':q},n)['status'] == 'rejected'
+        assert candidate_decision({'query':q+' zero'},n)['status'] == 'accepted'

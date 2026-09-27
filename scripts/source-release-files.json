@@ -590,5 +590,9 @@
   {
     "source": "public-site/src/product-picker.jsx",
     "target": "public-site/src/product-picker.jsx"
+  },
+  {
+    "source": "public-site/src/purchase-review.js",
+    "target": "public-site/src/purchase-review.js"
   }
 ]
